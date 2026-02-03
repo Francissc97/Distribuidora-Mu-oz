@@ -3,44 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Distribuidora Muñoz | Alimentos de Primera Necesidad</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Distribuidora Muñoz | Catálogo Digital</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <header>
-        <div class="container">
-            <h1>DISTRIBUIDORA MUÑOZ</h1>
-            <p>Abasteciendo tu negocio con calidad y puntualidad</p>
-            <a href="#catalogo" class="btn-primary">Ver Productos</a>
+    <nav class="navbar">
+        <div class="logo">DISTRIBUIDORA <span>MUÑOZ</span></div>
+        <a href="https://wa.me/51999999999" class="btn-contact"><i class="fa-brands fa-whatsapp"></i> Contacto Directo</a>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Abastece tu negocio con los mejores precios</h1>
+            <p>Distribución mayorista de alimentos de primera necesidad.</p>
+            <a href="#catalogo" class="btn-primary">Ver Catálogo</a>
         </div>
     </header>
 
-    <section class="info-bar">
-        <div class="benefit">
-            <i class="fa-solid fa-truck-fast"></i>
-            <span>Logística Propia (Transportes Muñoz)</span>
+    <section class="benefits-bar">
+        <div class="benefit-item">
+            <i class="fa-solid fa-truck"></i>
+            <span>Logística Propia</span>
         </div>
-        <div class="benefit">
-            <i class="fa-solid fa-tags"></i>
-            <span>Precios Mayoristas</span>
+        <div class="benefit-item">
+            <i class="fa-solid fa-money-bill-wave"></i>
+            <span>Precios de Mayorista</span>
         </div>
-        <div class="benefit">
-            <i class="fa-solid fa-shield-halved"></i>
-            <span>Garantía y Confianza</span>
+        <div class="benefit-item">
+            <i class="fa-solid fa-medal"></i>
+            <span>Garantía Total</span>
         </div>
     </section>
 
     <section id="catalogo" class="container">
-        <h2>Nuestros Productos</h2>
-        <div id="grid-productos" class="product-grid"></div>
+        <h2 class="section-title">Nuestros Productos</h2>
+        <div id="grid-productos" class="product-grid">
+            <p style="text-align:center; width:100%;">Cargando catálogo...</p>
+        </div>
     </section>
 
     <footer>
-        <p>&copy; 2026 Distribuidora Muñoz. Todos los derechos reservados.</p>
+        <p>&copy; 2026 Distribuidora Muñoz - Lima, Perú</p>
     </footer>
 
     <script src="script.js"></script>
 </body>
+</html>
+
+    <script src="script.js"></script>
+</body>
+
 </html>
