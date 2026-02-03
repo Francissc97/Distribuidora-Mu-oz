@@ -1,161 +1,69 @@
-// 1. Base de datos de tus productos REALES
-const productos = [
-    // --- SACOS Y GRANOS ---
-    {
-        id: 1,
-        nombre: "Azúcar Andahuasi (Saco 50kg)",
-        categoria: "Sacos",
-        precio: 119.00,
-        descripcion: "Rubia Doméstica",
-        imagen: "azucar-andahuasi.jpg" 
-    },
-    {
-        id: 2,
-        nombre: "Harina Doña Angélica (Saco 50kg)",
-        categoria: "Sacos",
-        precio: 108.00,
-        descripcion: "Especial para panadería",
-        imagen: "harina-angelica.jpg"
-    },
-    {
-        id: 3,
-        nombre: "Arroz Costeño (Saco 50kg)",
-        categoria: "Sacos",
-        precio: null, // null indica que se debe consultar
-        descripcion: "Extra Graneado",
-        imagen: "arroz-costeno.jpg"
-    },
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Iniciando carga de productos...");
 
-    // --- ACEITES ---
-    {
-        id: 4,
-        nombre: "Aceite Miramar (Caja 12 unid.)",
-        categoria: "Aceites",
-        precio: 64.00,
-        descripcion: "Botellas de 900ml",
-        imagen: "aceite-miramar.jpg"
-    },
-    {
-        id: 5,
-        nombre: "Aceite Bucanero (Caja 12 unid.)",
-        categoria: "Aceites",
-        precio: 57.00,
-        descripcion: "Botellas de 800ml",
-        imagen: "aceite-bucanero.jpg"
-    },
-    {
-        id: 6,
-        nombre: "Aceite Friemass (Caja 12 unid.)",
-        categoria: "Aceites",
-        precio: 64.00,
-        descripcion: "Botellas de 900ml",
-        imagen: "aceite-friemass.jpg"
-    },
+    // BASE DE DATOS DE PRODUCTOS (Basado en tus imágenes)
+    const productos = [
+        // --- SACOS Y GRANOS ---
+        { id: 1, nombre: "Azúcar Andahuasi (50kg)", cat: "Sacos", precio: 119.00, desc: "Rubia Doméstica", img: "azucar-andahuasi.jpg" },
+        { id: 2, nombre: "Harina Doña Angélica (50kg)", cat: "Sacos", precio: 108.00, desc: "Especial panadería", img: "harina-angelica.jpg" },
+        { id: 3, nombre: "Arroz Costeño (50kg)", cat: "Sacos", precio: null, desc: "Extra Graneado", img: "arroz-costeno.jpg" },
+        
+        // --- ACEITES ---
+        { id: 4, nombre: "Aceite Miramar (12x900ml)", cat: "Aceites", precio: 64.00, desc: "Caja x 12 Unidades", img: "aceite-miramar.jpg" },
+        { id: 5, nombre: "Aceite Bucanero (12x800ml)", cat: "Aceites", precio: 57.00, desc: "Caja x 12 Unidades", img: "aceite-bucanero.jpg" },
+        { id: 6, nombre: "Aceite Friemass (12x900ml)", cat: "Aceites", precio: 64.00, desc: "Caja x 12 Unidades", img: "aceite-friemass.jpg" },
 
-    // --- FIDEOS Y PASTAS (ANITA) ---
-    {
-        id: 7,
-        nombre: "Fideo Spaghetti Anita (10kg)",
-        categoria: "Fideos",
-        precio: 31.00,
-        descripcion: "Textura perfecta, rinde más",
-        imagen: "spaghetti-anita.jpg"
-    },
-    {
-        id: 8,
-        nombre: "Codo Rayado Anita (5kg)",
-        categoria: "Fideos",
-        precio: 15.50,
-        descripcion: "Cocción pareja",
-        imagen: "codo-anita.jpg"
-    },
-    {
-        id: 9,
-        nombre: "Canuto Rayado Anita (5kg)",
-        categoria: "Fideos",
-        precio: 15.50,
-        descripcion: "Ideal para gratinados",
-        imagen: "canuto-anita.jpg"
-    },
-    {
-        id: 10,
-        nombre: "Cabello de Angel Anita (5kg)",
-        categoria: "Fideos",
-        precio: 15.50,
-        descripcion: "Cocción rápida",
-        imagen: "cabello-angel.jpg"
-    },
-    {
-        id: 11,
-        nombre: "Plumita Anita (5kg)",
-        categoria: "Fideos",
-        precio: 15.50,
-        descripcion: "No se rompe",
-        imagen: "plumita-anita.jpg"
-    },
-    {
-        id: 12,
-        nombre: "Corbata Anita (250g)",
-        categoria: "Fideos",
-        precio: 15.50, // Precio ajustado al paquete según imagen (revisar si es por paquete o fardo)
-        descripcion: "Presentación atractiva",
-        imagen: "corbata-anita.jpg"
-    },
+        // --- FIDEOS ANITA ---
+        { id: 7, nombre: "Spaghetti Anita (10kg)", cat: "Pastas", precio: 31.00, desc: "Rinde más", img: "spaghetti-anita.jpg" },
+        { id: 8, nombre: "Codo Rayado Anita (5kg)", cat: "Pastas", precio: 15.50, desc: "Cocción pareja", img: "codo-anita.jpg" },
+        { id: 9, nombre: "Canuto Rayado Anita (5kg)", cat: "Pastas", precio: 15.50, desc: "Ideal gratinados", img: "canuto-anita.jpg" },
+        { id: 10, nombre: "Cabello Angel Anita (5kg)", cat: "Pastas", precio: 15.50, desc: "Cocción rápida", img: "cabello-angel.jpg" },
+        { id: 11, nombre: "Plumita Anita (5kg)", cat: "Pastas", precio: 15.50, desc: "No se rompe", img: "plumita-anita.jpg" },
+        
+        // --- VARIOS ---
+        { id: 12, nombre: "Leche Gloria (Lata)", cat: "Lácteos", precio: null, desc: "Consultar x mayor", img: "leche-gloria.jpg" }
+    ];
+
+    const grid = document.getElementById('grid-productos');
     
-    // --- OTROS ---
-    {
-        id: 13,
-        nombre: "Leche Gloria (Lata)",
-        categoria: "Lácteos",
-        precio: null,
-        descripcion: "Consultar por mayor",
-        imagen: "leche-gloria.jpg"
-    }
-];
+    // Limpiamos el mensaje de "Cargando..."
+    grid.innerHTML = '';
 
-// 2. Función para pintar los productos en el HTML
-const grid = document.getElementById('grid-productos');
+    // Generamos las tarjetas
+    productos.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'card';
 
-productos.forEach(producto => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    
-    // Lógica para mostrar precio o "Consultar"
-    let precioTexto = "";
-    if (producto.precio === null) {
-        precioTexto = `<span style="color:orange">Consultar Precio</span>`;
-    } else {
-        precioTexto = `S/ ${producto.precio.toFixed(2)}`;
-    }
+        // Lógica de precio
+        let precioHTML = p.precio ? `S/ ${p.precio.toFixed(2)}` : '<span style="color:#FF6600; font-size:1.1rem">Consultar</span>';
 
-    // Nota: Las imágenes deben estar en tu carpeta. Si no existen, saldrá un cuadro gris.
-    card.innerHTML = `
-        <img src="${producto.imagen}" alt="${producto.nombre}" class="card-img" onerror="this.src='https://via.placeholder.com/300?text=Sin+Foto'">
-        <div class="card-body">
-            <span class="card-category">${producto.categoria}</span>
-            <h3 class="card-title">${producto.nombre}</h3>
-            <p style="font-size: 0.9rem; color: #555;">${producto.descripcion}</p>
-            <p class="card-price">${precioTexto}</p>
-            <button class="btn-whatsapp" onclick="pedirWsp('${producto.nombre}', ${producto.precio})">
-                <i class="fa-brands fa-whatsapp"></i> Cotizar
-            </button>
-        </div>
-    `;
-    
-    grid.appendChild(card);
+        // HTML de la tarjeta
+        card.innerHTML = `
+            <div class="card-img-container">
+                <span class="badge">${p.cat}</span>
+                <img src="${p.img}" alt="${p.nombre}" class="card-img" onerror="this.src='https://via.placeholder.com/300?text=Sin+Foto'">
+            </div>
+            <div class="card-body">
+                <h3 class="card-title">${p.nombre}</h3>
+                <p class="card-desc">${p.desc}</p>
+                <div class="card-price">${precioHTML}</div>
+                <button class="btn-whatsapp" onclick="pedir('${p.nombre}', ${p.precio})">
+                    <i class="fa-brands fa-whatsapp"></i> Pedir
+                </button>
+            </div>
+        `;
+        grid.appendChild(card);
+    });
 });
 
-// 3. Función para enviar a WhatsApp
-function pedirWsp(nombre, precio) {
-    const telefono = "51999999999"; // ¡COLOCA AQUÍ EL NÚMERO DE VENTAS DE DISTRIBUIDORA MUÑOZ!
+// Función de pedido fuera del evento de carga para que sea accesible
+function pedir(producto, precio) {
+    const telefono = "51999999999"; // ¡PON TU NÚMERO AQUÍ!
+    let msj = precio 
+        ? `Hola Distribuidora Muñoz, deseo el producto: ${producto} a S/${precio}.`
+        : `Hola, deseo cotizar el producto: ${producto}.`;
     
-    let mensaje = "";
-    if (precio) {
-        mensaje = `Hola Distribuidora Muñoz, deseo pedir: ${nombre} a S/ ${precio}. ¿Tienen stock?`;
-    } else {
-        mensaje = `Hola Distribuidora Muñoz, deseo cotizar el precio actual de: ${nombre}.`;
-    }
-    
-    const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
-    window.open(url, '_blank');
+    window.open(`https://wa.me/${telefono}?text=${encodeURIComponent(msj)}`, '_blank');
+}
+
 }
