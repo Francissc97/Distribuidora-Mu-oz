@@ -2,176 +2,212 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Distribuidora Muñoz | Tienda Virtual</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Distribuidora Muñoz | Tienda Oficial</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <style>
-        /* ESTILOS ADICIONALES PARA LA VERSIÓN "TOTTUS/PLAZA VEA" */
+        /* --- MEJORAS PARA MÓVIL Y UX --- */
         
-        /* 1. Buscador */
-        .search-container {
-            text-align: center; margin-top: -30px; margin-bottom: 20px; position: relative; z-index: 10;
-        }
-        .search-input {
-            width: 90%; max-width: 600px; padding: 15px 20px;
-            border-radius: 50px; border: 1px solid #ddd;
-            font-size: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            outline: none; transition: 0.3s;
-        }
-        .search-input:focus { border-color: #FF6600; box-shadow: 0 5px 20px rgba(255, 102, 0, 0.2); }
+        /* Ajuste para que no hagan zoom al tocar inputs en celular */
+        input, button, select, textarea { font-size: 16px; }
 
-        /* 2. Filtros de Categoría */
-        .category-filters {
-            display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 30px;
+        /* Buscador más limpio */
+        .search-container { text-align: center; margin: -25px 0 20px 0; position: relative; z-index: 10; padding: 0 15px; }
+        .search-input { width: 100%; max-width: 600px; padding: 15px; border-radius: 50px; border: 1px solid #ddd; outline: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+
+        /* Filtros con scroll horizontal en celular */
+        .category-filters { display: flex; gap: 10px; overflow-x: auto; padding: 10px 15px; white-space: nowrap; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        .category-filters::-webkit-scrollbar { display: none; } /* Ocultar barra scroll */
+        .cat-btn { flex: 0 0 auto; background: white; border: 1px solid #ddd; padding: 8px 18px; border-radius: 20px; font-weight: 600; color: #555; }
+        .cat-btn.active { background: #002E5D; color: white; border-color: #002E5D; }
+
+        /* GRID RESPONSIVO (2 columnas en celular) */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; padding: 0 10px; }
+        
+        /* Ajustes de tarjeta para móvil */
+        .card { display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
+        .card img { height: 160px; object-fit: contain; background: white; padding: 10px; }
+        .info { padding: 12px; }
+        .name { font-size: 0.95rem; line-height: 1.2; margin-bottom: 5px; height: 38px; overflow: hidden; }
+        .stock-label { font-size: 0.75rem; color: #28a745; font-weight: bold; margin-bottom: 5px; display: block; }
+        .stock-low { color: #dc3545; }
+
+        /* CONTROLES DE CANTIDAD EN TARJETA */
+        .controls { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; background: #f8f9fa; border-radius: 8px; padding: 4px; }
+        .qty-btn { width: 30px; height: 30px; background: white; border: 1px solid #ddd; border-radius: 50%; font-weight: bold; color: #002E5D; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .cant-input { width: 40px; border: none; background: transparent; text-align: center; font-weight: bold; -moz-appearance: textfield; }
+        
+        /* BOTÓN AGREGAR */
+        .btn-add { background: #002E5D; color: white; border: none; padding: 10px; width: 100%; border-radius: 8px; font-weight: bold; font-size: 0.9rem; }
+        .btn-add:disabled { background: #ccc; cursor: not-allowed; }
+
+        /* --- VENTANA MODAL DEL CARRITO (NUEVO) --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 5000; display: none;
+            justify-content: center; align-items: end; /* En celular sale desde abajo */
         }
-        .cat-btn {
-            background: white; border: 1px solid #ddd; padding: 8px 15px;
-            border-radius: 20px; cursor: pointer; font-weight: 600; color: #555;
-            transition: 0.3s;
+        .modal-overlay.open { display: flex; }
+
+        .modal-content {
+            background: white; width: 100%; max-width: 500px;
+            height: 85vh; /* Ocupa casi toda la pantalla */
+            border-radius: 20px 20px 0 0;
+            padding: 20px; display: flex; flex-direction: column;
+            animation: slideUp 0.3s ease-out;
         }
-        .cat-btn:hover, .cat-btn.active {
-            background: #002E5D; color: white; border-color: #002E5D;
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 10px; }
+        .modal-body { flex-grow: 1; overflow-y: auto; }
+        .modal-footer { border-top: 1px solid #eee; padding-top: 15px; }
+
+        /* Items del carrito */
+        .cart-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f9f9f9; }
+        .cart-item img { width: 50px; height: 50px; object-fit: contain; }
+        .cart-item-details { flex-grow: 1; }
+        .cart-item-title { font-size: 0.9rem; font-weight: bold; display: block; }
+        .cart-item-price { font-size: 0.85rem; color: #666; }
+        .cart-controls { display: flex; align-items: center; gap: 5px; }
+        .btn-delete { color: #dc3545; background: none; border: none; padding: 5px; cursor: pointer; }
+
+        /* Botón Confirmar */
+        .btn-confirm {
+            background: #25D366; color: white; width: 100%; padding: 15px;
+            border: none; border-radius: 10px; font-weight: bold; font-size: 1.1rem;
+            display: flex; justify-content: center; align-items: center; gap: 10px;
         }
 
-        /* 3. Botón Flotante de Canasta */
-        .cart-float {
-            position: fixed; bottom: 20px; right: 20px;
-            background-color: #FF6600; color: white;
-            padding: 15px 25px; border-radius: 50px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-            cursor: pointer; z-index: 2000;
-            display: flex; align-items: center; gap: 10px;
-            font-weight: bold; transition: transform 0.2s;
-            animation: bounceIn 1s;
+        /* Float button fix */
+        .cart-float { bottom: 20px; right: 20px; z-index: 4000; }
+        
+        /* Responsive PC */
+        @media(min-width: 768px) {
+            .modal-overlay { align-items: center; }
+            .modal-content { height: auto; max-height: 80vh; border-radius: 15px; }
+            .grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
         }
-        .cart-float:hover { transform: scale(1.05); }
-        .cart-count { background: white; color: #FF6600; padding: 2px 8px; border-radius: 10px; font-size: 0.9rem; }
-
-        @keyframes bounceIn {
-            0% { transform: scale(0); } 80% { transform: scale(1.1); } 100% { transform: scale(1); }
-        }
-
-        /* 4. Notificación de "Agregado" */
-        .toast {
-            position: fixed; top: 20px; right: 20px;
-            background: #25D366; color: white; padding: 15px 25px;
-            border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            transform: translateX(200%); transition: transform 0.3s ease-out;
-            z-index: 3000; font-weight: bold;
-        }
-        .toast.show { transform: translateX(0); }
-
-        /* Ajustes pequeños */
-        .btn-add {
-            background: #002E5D; color: white; border: none; padding: 10px; width: 100%;
-            border-radius: 8px; font-weight: bold; cursor: pointer; display: flex;
-            justify-content: center; align-items: center; gap: 8px; margin-top: 10px;
-        }
-        .btn-add:hover { background: #001a35; }
-        .controls { justify-content: space-between; margin-bottom: 5px; }
     </style>
 </head>
 <body>
 
-    <div id="toast" class="toast"><i class="fa-solid fa-check"></i> Agregado a la canasta</div>
+    <div id="cart-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Tu Canasta</h2>
+                <button onclick="cerrarCarrito()" style="background:none; border:none; font-size:1.5rem;">&times;</button>
+            </div>
+            <div class="modal-body" id="cart-items-container">
+                <p style="text-align:center; color:#888; margin-top:50px;">Tu canasta está vacía</p>
+            </div>
+            <div class="modal-footer">
+                <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-weight:bold; font-size:1.2rem;">
+                    <span>Total:</span>
+                    <span id="cart-total">S/ 0.00</span>
+                </div>
+                <button class="btn-confirm" onclick="enviarPedidoWhatsApp()">
+                    <i class="fa-brands fa-whatsapp"></i> ENVIAR PEDIDO
+                </button>
+            </div>
+        </div>
+    </div>
 
-    <div class="cart-float" onclick="enviarPedidoCompleto()">
+    <div id="toast" class="toast"><i class="fa-solid fa-check"></i> Agregado</div>
+
+    <div class="cart-float" onclick="abrirCarrito()">
         <i class="fa-solid fa-cart-shopping"></i>
-        <span>Ver Canasta</span>
-        <span id="cart-counter" class="cart-count">0</span>
+        <span id="cart-label" style="display:none"> Ver</span> <span id="cart-counter" class="cart-count">0</span>
     </div>
 
     <nav>
-        <a href="." title="Recargar"><img src="logo.jpg" alt="Distribuidora Muñoz" class="logo-img" onerror="this.src='logo.png'"></a>
+        <a href="."><img src="logo.jpg" alt="Logo" class="logo-img" onerror="this.src='logo.png'"></a>
         <div class="nav-contact">
-            <a href="https://wa.me/51964604628" class="btn-nav-wsp" target="_blank">
-                <i class="fa-brands fa-whatsapp"></i> Atención al Cliente
-            </a>
+            <a href="https://wa.me/51999999999" class="btn-nav-wsp" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
         </div>
     </nav>
 
     <header>
         <div class="hero-content">
             <h1>Abastece tu negocio</h1>
-            <p>Distribución mayorista de alimentos de primera necesidad.</p>
         </div>
     </header>
 
     <div class="search-container">
-        <input type="text" id="buscador" class="search-input" placeholder="🔍 ¿Qué producto estás buscando hoy? (Ej: Arroz, Aceite...)">
+        <input type="text" id="buscador" class="search-input" placeholder="🔍 Buscar producto...">
     </div>
 
     <section id="catalogo" class="container">
-        
-        <div class="category-filters" id="filtros">
+        <div class="category-filters">
             <button class="cat-btn active" onclick="filtrar('Todo')">Todos</button>
             <button class="cat-btn" onclick="filtrar('Sacos')">Sacos</button>
             <button class="cat-btn" onclick="filtrar('Aceites')">Aceites</button>
             <button class="cat-btn" onclick="filtrar('Fideos')">Fideos</button>
             <button class="cat-btn" onclick="filtrar('Lácteos')">Lácteos</button>
         </div>
-
         <div id="grid-productos" class="grid"></div>
     </section>
 
     <footer>
         <div class="footer-content">
-            <p><strong>Distribuidora Muñoz</strong></p>
-            <p>&copy; 2026 Todos los derechos reservados.</p>
+            <p>&copy; 2026 Distribuidora Muñoz</p>
         </div>
     </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const MI_WHATSAPP = "51964604628"; // ¡PON TU NÚMERO AQUÍ!
-            let carrito = []; // Aquí guardaremos los productos
+            const MI_WHATSAPP = "51999999999"; // PON TU NÚMERO
+            let carrito = [];
 
-            // TUS PRODUCTOS
+            // --- AQUÍ DEFINES TU STOCK ---
+            // 'stock' es la cantidad máxima que tienes en almacén.
             const productos = [
-                { id: 1, nombre: "Azúcar Andahuasi (50kg)", precio: 119.00, cat: "Sacos", img: "azucar-andahuasi.jpg" },
-                { id: 2, nombre: "Harina Doña Angélica (50kg)", precio: 108.00, cat: "Sacos", img: "harina-angelica.jpg" },
-                { id: 3, nombre: "Arroz Costeño (50kg)", precio: null, cat: "Sacos", img: "arroz-costeno.jpg" },
-                { id: 4, nombre: "Aceite Miramar (Caja 12unid)", precio: 64.00, cat: "Aceites", img: "aceite-miramar.jpg" },
-                { id: 5, nombre: "Aceite Friemass (Caja 12unid)", precio: 64.00, cat: "Aceites", img: "aceite-friemass.jpg" },
-                { id: 6, nombre: "Aceite Bucanero (Caja 12unid)", precio: 57.00, cat: "Aceites", img: "aceite-bucanero.jpg" },
-                { id: 7, nombre: "Spaghetti Anita (10kg)", precio: 31.00, cat: "Fideos", img: "spaghetti-anita.jpg" },
-                { id: 8, nombre: "Codo Rayado Anita (5kg)", precio: 15.50, cat: "Fideos", img: "codo-anita.jpg" },
-                { id: 9, nombre: "Canuto Rayado Anita (5kg)", precio: 15.50, cat: "Fideos", img: "canuto-anita.jpg" },
-                { id: 10, nombre: "Leche Gloria (Lata)", precio: null, cat: "Lácteos", img: "leche-gloria.jpg" }
+                { id: 1, nombre: "Azúcar Andahuasi (50kg)", precio: 119.00, cat: "Sacos", img: "azucar-andahuasi.jpg", stock: 50 },
+                { id: 2, nombre: "Harina Doña Angélica (50kg)", precio: 108.00, cat: "Sacos", img: "harina-angelica.jpg", stock: 30 },
+                { id: 3, nombre: "Arroz Costeño (50kg)", precio: null, cat: "Sacos", img: "arroz-costeno.jpg", stock: 100 },
+                { id: 4, nombre: "Aceite Miramar (12unid)", precio: 64.00, cat: "Aceites", img: "aceite-miramar.jpg", stock: 45 },
+                { id: 5, nombre: "Aceite Friemass (12unid)", precio: 64.00, cat: "Aceites", img: "aceite-friemass.jpg", stock: 25 },
+                { id: 6, nombre: "Aceite Bucanero (12unid)", precio: 57.00, cat: "Aceites", img: "aceite-bucanero.jpg", stock: 20 },
+                { id: 7, nombre: "Spaghetti Anita (10kg)", precio: 31.00, cat: "Fideos", img: "spaghetti-anita.jpg", stock: 60 },
+                { id: 8, nombre: "Codo Rayado Anita (5kg)", precio: 15.50, cat: "Fideos", img: "codo-anita.jpg", stock: 40 },
+                { id: 9, nombre: "Canuto Rayado Anita (5kg)", precio: 15.50, cat: "Fideos", img: "canuto-anita.jpg", stock: 40 },
+                { id: 10, nombre: "Leche Gloria (Lata)", precio: null, cat: "Lácteos", img: "leche-gloria.jpg", stock: 200 }
             ];
 
             const contenedor = document.getElementById('grid-productos');
             const buscador = document.getElementById('buscador');
 
-            // FUNCIÓN PARA PINTAR PRODUCTOS
+            // --- RENDERIZAR PRODUCTOS ---
             function renderizarProductos(lista) {
                 contenedor.innerHTML = '';
-                lista.forEach((p, index) => {
+                lista.forEach((p) => {
                     const card = document.createElement('div');
                     card.className = 'card';
-                    card.style.animationDelay = `${index * 0.05}s`;
-
-                    const precioTxt = p.precio ? `S/ ${p.precio.toFixed(2)}` : "Consultar";
-                    const inputId = `cant-${p.id}`;
+                    
+                    const precioTxt = p.precio ? `S/ ${p.precio.toFixed(2)}` : "Cotizar";
+                    const stockClass = p.stock < 10 ? 'stock-low' : ''; // Rojo si queda poco
+                    const stockTxt = p.stock > 0 ? `Stock: ${p.stock}` : 'AGOTADO';
+                    const disabled = p.stock === 0 ? 'disabled' : '';
 
                     card.innerHTML = `
-                        <div style="position:relative;">
+                        <div style="position:relative">
                             <span class="cat-badge">${p.cat}</span>
-                            <img src="${p.img}" onerror="this.src='https://via.placeholder.com/300x250?text=Imagen'" alt="${p.nombre}">
+                            <img src="${p.img}" onerror="this.src='https://via.placeholder.com/200?text=Foto'" alt="${p.nombre}">
                         </div>
                         <div class="info">
+                            <span class="stock-label ${stockClass}">${stockTxt}</span>
                             <h3 class="name">${p.nombre}</h3>
-                            <div class="price" style="${!p.precio ? 'color:#FF6600' : ''}">${precioTxt}</div>
+                            <div class="price">${precioTxt}</div>
                             
                             <div class="controls">
-                                <label>Cantidad:</label>
-                                <input type="number" id="${inputId}" value="1" min="1" class="cant-input">
+                                <button class="qty-btn" onclick="ajustarInput(${p.id}, -1)">-</button>
+                                <input type="number" id="input-${p.id}" value="1" min="1" max="${p.stock}" class="cant-input" readonly>
+                                <button class="qty-btn" onclick="ajustarInput(${p.id}, 1)">+</button>
                             </div>
 
-                            <button class="btn-add" onclick="agregarAlCarrito(${p.id})">
-                                <i class="fa-solid fa-cart-plus"></i> AGREGAR
+                            <button class="btn-add" onclick="agregar(${p.id})" ${disabled}>
+                                ${p.stock > 0 ? 'AGREGAR' : 'SIN STOCK'}
                             </button>
                         </div>
                     `;
@@ -179,86 +215,163 @@
                 });
             }
 
-            // CARGAR TODO AL INICIO
             renderizarProductos(productos);
 
-            // LOGICA DEL BUSCADOR
-            buscador.addEventListener('input', (e) => {
-                const texto = e.target.value.toLowerCase();
-                const filtrados = productos.filter(p => p.nombre.toLowerCase().includes(texto));
-                renderizarProductos(filtrados);
-            });
-
-            // LOGICA DE FILTROS CATEGORIA
-            window.filtrar = function(categoria) {
-                // Estilo botones
-                document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
-                event.target.classList.add('active');
-
-                if(categoria === 'Todo') {
-                    renderizarProductos(productos);
-                } else {
-                    const filtrados = productos.filter(p => p.cat === categoria);
-                    renderizarProductos(filtrados);
-                }
-            };
-
-            // LOGICA CARRITO
-            window.agregarAlCarrito = function(id) {
+            // --- AJUSTAR INPUT EN LA TARJETA ---
+            window.ajustarInput = function(id, cambio) {
+                const input = document.getElementById(`input-${id}`);
                 const prod = productos.find(p => p.id === id);
-                const input = document.getElementById(`cant-${id}`);
-                const cantidad = parseInt(input.value);
+                let val = parseInt(input.value) + cambio;
+                
+                // Validar límites
+                if(val < 1) val = 1;
+                if(val > prod.stock) val = prod.stock; // No deja pasar del stock
+                
+                input.value = val;
+            };
 
-                if(cantidad > 0) {
-                    // Buscar si ya existe en el carrito
-                    const existente = carrito.find(item => item.id === id);
-                    if(existente) {
-                        existente.cantidad += cantidad;
-                    } else {
-                        carrito.push({ ...prod, cantidad: cantidad });
-                    }
-                    
+            // --- AGREGAR AL CARRITO CON VALIDACIÓN DE STOCK ---
+            window.agregar = function(id) {
+                const prod = productos.find(p => p.id === id);
+                const input = document.getElementById(`input-${id}`);
+                const cantidadDeseada = parseInt(input.value);
+                
+                // Verificar si ya está en el carrito
+                const itemEnCarrito = carrito.find(item => item.id === id);
+                const cantidadEnCarrito = itemEnCarrito ? itemEnCarrito.cantidad : 0;
+
+                // VALIDACIÓN IMPORTANTE
+                if (cantidadDeseada + cantidadEnCarrito > prod.stock) {
+                    alert(`¡Lo sentimos! Solo nos quedan ${prod.stock} unidades de este producto.`);
+                    return;
+                }
+
+                if(itemEnCarrito) {
+                    itemEnCarrito.cantidad += cantidadDeseada;
+                } else {
+                    carrito.push({ ...prod, cantidad: cantidadDeseada });
+                }
+
+                actualizarContador();
+                mostrarToast();
+                input.value = 1; // Resetear
+            };
+
+            // --- FUNCIONES DEL MODAL (CARRITO EDITABLE) ---
+            window.abrirCarrito = function() {
+                const modal = document.getElementById('cart-modal');
+                const container = document.getElementById('cart-items-container');
+                const totalElem = document.getElementById('cart-total');
+                
+                modal.classList.add('open');
+                container.innerHTML = '';
+
+                if(carrito.length === 0) {
+                    container.innerHTML = '<p style="text-align:center; margin-top:50px; color:#999">Tu canasta está vacía</p>';
+                    totalElem.innerText = 'S/ 0.00';
+                    return;
+                }
+
+                let totalGeneral = 0;
+
+                carrito.forEach((item, index) => {
+                    const subtotal = item.precio ? (item.precio * item.cantidad) : 0;
+                    totalGeneral += subtotal;
+
+                    const row = document.createElement('div');
+                    row.className = 'cart-item';
+                    row.innerHTML = `
+                        <img src="${item.img}" onerror="this.src='https://via.placeholder.com/50'">
+                        <div class="cart-item-details">
+                            <span class="cart-item-title">${item.nombre}</span>
+                            <span class="cart-item-price">Precio: S/ ${item.precio ? item.precio.toFixed(2) : '--'}</span>
+                        </div>
+                        <div class="cart-controls">
+                            <button class="qty-btn" onclick="cambiarCantCarrito(${index}, -1)">-</button>
+                            <span style="font-weight:bold; width:20px; text-align:center;">${item.cantidad}</span>
+                            <button class="qty-btn" onclick="cambiarCantCarrito(${index}, 1)">+</button>
+                            <button class="btn-delete" onclick="eliminarDelCarrito(${index})"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    `;
+                    container.appendChild(row);
+                });
+
+                totalElem.innerText = `S/ ${totalGeneral.toFixed(2)}`;
+            };
+
+            window.cerrarCarrito = function() {
+                document.getElementById('cart-modal').classList.remove('open');
+            };
+
+            window.cambiarCantCarrito = function(index, cambio) {
+                const item = carrito[index];
+                const nuevoValor = item.cantidad + cambio;
+
+                // Validar Stock
+                if(nuevoValor > item.stock) {
+                    alert(`Solo hay ${item.stock} unidades disponibles.`);
+                    return;
+                }
+                
+                if(nuevoValor > 0) {
+                    item.cantidad = nuevoValor;
+                    abrirCarrito(); // Redibujar
                     actualizarContador();
-                    mostrarToast();
-                    input.value = 1; // Resetear input
                 }
             };
 
+            window.eliminarDelCarrito = function(index) {
+                carrito.splice(index, 1);
+                abrirCarrito();
+                actualizarContador();
+            };
+
+            // --- ENVIAR A WHATSAPP ---
+            window.enviarPedidoWhatsApp = function() {
+                if(carrito.length === 0) return;
+
+                let mensaje = "Hola Distribuidora Muñoz, deseo confirmar mi pedido:%0A%0A";
+                let total = 0;
+
+                carrito.forEach(item => {
+                    const subtotal = item.precio ? (item.precio * item.cantidad) : 0;
+                    total += subtotal;
+                    const precioTxt = item.precio ? `S/ ${item.precio.toFixed(2)}` : "A cotizar";
+                    mensaje += `▪ *(${item.cantidad})* ${item.nombre} - ${precioTxt}%0A`;
+                });
+
+                mensaje += `%0A-----------------------------------%0A`;
+                mensaje += `💰 *TOTAL APROX: S/ ${total.toFixed(2)}*%0A`;
+                
+                window.open(`https://wa.me/${MI_WHATSAPP}?text=${mensaje}`, '_blank');
+                
+                // Opcional: Limpiar carrito tras enviar
+                // carrito = []; 
+                // actualizarContador();
+                // cerrarCarrito();
+            };
+
+            // Funciones auxiliares
             function actualizarContador() {
                 const count = carrito.reduce((acc, item) => acc + item.cantidad, 0);
                 document.getElementById('cart-counter').innerText = count;
             }
-
             function mostrarToast() {
                 const toast = document.getElementById('toast');
                 toast.classList.add('show');
                 setTimeout(() => toast.classList.remove('show'), 2000);
             }
-
-            // ENVIAR PEDIDO COMPLETO A WHATSAPP
-            window.enviarPedidoCompleto = function() {
-                if(carrito.length === 0) {
-                    alert("Tu canasta está vacía. Agrega productos primero.");
-                    return;
-                }
-
-                let mensaje = "Hola Distribuidora Muñoz, deseo realizar el siguiente pedido:%0A%0A";
-                let totalGeneral = 0;
-
-                carrito.forEach(item => {
-                    const subtotal = item.precio ? (item.precio * item.cantidad) : 0;
-                    totalGeneral += subtotal;
-                    
-                    const precioUnit = item.precio ? `(S/ ${item.precio.toFixed(2)})` : "(Consultar)";
-                    
-                    mensaje += `▪ *${item.cantidad} x ${item.nombre}* %0A   ${precioUnit}%0A`;
-                });
-
-                mensaje += `%0A-----------------------------------%0A`;
-                mensaje += `%0A *TOTAL APROX: S/ ${totalGeneral.toFixed(2)}*%0A`;
-                mensaje += `(Sujeto a productos por consultar)`;
-
-                window.open(`https://wa.me/${MI_WHATSAPP}?text=${mensaje}`, '_blank');
+            
+            // Filtros y Buscador
+            buscador.addEventListener('input', (e) => {
+                const txt = e.target.value.toLowerCase();
+                renderizarProductos(productos.filter(p => p.nombre.toLowerCase().includes(txt)));
+            });
+            window.filtrar = function(cat) {
+                document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+                event.target.classList.add('active');
+                if(cat === 'Todo') renderizarProductos(productos);
+                else renderizarProductos(productos.filter(p => p.cat === cat));
             };
         });
     </script>
