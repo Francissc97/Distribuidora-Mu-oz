@@ -1,95 +1,108 @@
-/* Reset y Fuente Global */
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
+/* =========================================
+   DISEÑO PROFESIONAL DISTRIBUIDORA MUÑOZ
+   (Con Animaciones de Movimiento)
+   ========================================= */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 
-body { background-color: #f8f9fa; color: #333; }
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
+body { background-color: #f4f7f6; } /* Fondo gris muy suave */
 
-/* Barra de Navegación */
-.navbar {
-    background-color: #002E5D; /* Azul Corporativo */
-    padding: 15px 20px;
+/* --- ANIMACIONES --- */
+/* Define el movimiento: empieza invisible y abajo, termina visible y en su sitio */
+@keyframes subirAparecer {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* NAVBAR (Barra de navegación) */
+nav {
+    background: #002E5D; /* Azul Corporativo */
+    padding: 15px 20px; color: white;
     display: flex; justify-content: space-between; align-items: center;
-    position: sticky; top: 0; z-index: 100;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    position: sticky; top: 0; z-index: 1000; /* Siempre visible arriba */
 }
-.logo { color: white; font-weight: bold; font-size: 1.5rem; }
+.logo { font-size: 1.4rem; font-weight: bold; letter-spacing: 1px; }
 .logo span { color: #FF6600; /* Naranja Corporativo */ }
-.btn-contact {
-    color: white; text-decoration: none; font-weight: bold;
-    border: 1px solid white; padding: 8px 15px; border-radius: 20px;
-    transition: 0.3s;
+.nav-contact a {
+    color: white; text-decoration: none; margin-left: 20px; font-size: 0.9rem;
+    transition: color 0.3s;
 }
-.btn-contact:hover { background: white; color: #002E5D; }
+.nav-contact a:hover { color: #FF6600; }
+.nav-contact i { margin-right: 8px; }
+.btn-nav-wsp { background: #25D366; padding: 8px 15px; border-radius: 20px; font-weight: bold; }
 
-/* Banner Hero */
-.hero {
-    background: linear-gradient(rgba(0,46,93,0.8), rgba(0,46,93,0.8)), url('https://images.unsplash.com/photo-1578916171728-46686eac8d58?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+/* HEADER (Banner Principal) */
+header {
+    /* Imagen de fondo de un almacén */
+    background: linear-gradient(rgba(0,46,93,0.85), rgba(0,46,93,0.85)), url('https://source.unsplash.com/1600x900/?warehouse,logistics');
     background-size: cover; background-position: center;
-    color: white; text-align: center; padding: 100px 20px;
+    color: white; text-align: center; padding: 80px 20px;
 }
-.hero h1 { font-size: 2.5rem; margin-bottom: 10px; }
-.btn-primary {
-    background-color: #FF6600; color: white; padding: 12px 30px;
-    text-decoration: none; font-weight: bold; border-radius: 5px;
-    display: inline-block; margin-top: 20px;
-}
-.btn-primary:hover { background-color: #e65c00; }
+header h1 { font-size: 2.8rem; margin-bottom: 15px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+header p { font-size: 1.3rem; opacity: 0.9; }
 
-/* Beneficios */
-.benefits-bar {
-    display: flex; justify-content: center; gap: 30px;
-    background: white; padding: 20px; flex-wrap: wrap;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-.benefit-item i { color: #FF6600; margin-right: 8px; }
+/* SECCIÓN CATÁLOGO */
+.container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+h2 { text-align: center; color: #002E5D; font-size: 2.2rem; margin-bottom: 40px; }
 
 /* Grid de Productos */
-.container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
-.section-title {
-    text-align: center; color: #002E5D; font-size: 2rem;
-    margin-bottom: 40px; text-transform: uppercase; letter-spacing: 1px;
-}
-
-.product-grid {
+.grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* Se adapta a celulares y PC */
+    gap: 30px;
 }
 
-/* Tarjeta de Producto (Estilo Shopify) */
+/* TARJETA DE PRODUCTO (Aquí se aplica la animación) */
 .card {
-    background: white; border-radius: 10px; overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-    transition: transform 0.3s ease; border: 1px solid #eee;
-    display: flex; flex-direction: column;
-}
-.card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-
-.card-img-container {
-    height: 220px; overflow: hidden; position: relative;
-    background-color: #fff; border-bottom: 1px solid #eee;
-}
-.card-img { width: 100%; height: 100%; object-fit: contain; padding: 10px; }
-
-.badge {
-    position: absolute; top: 10px; left: 10px;
-    background-color: #002E5D; color: white;
-    padding: 4px 10px; font-size: 0.75rem; border-radius: 4px;
+    background: white; border-radius: 12px; overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    
+    /* APLICA LA ANIMACIÓN */
+    animation: subirAparecer 0.6s ease-out forwards; /* Dura 0.6s, movimiento suave */
+    opacity: 0; /* Empieza invisible hasta que la animación arranca */
 }
 
-.card-body { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
-.card-title { font-size: 1.1rem; color: #222; margin-bottom: 5px; }
-.card-desc { font-size: 0.85rem; color: #666; margin-bottom: 15px; }
-.card-price {
-    font-size: 1.4rem; color: #FF6600; font-weight: bold; margin-top: auto; margin-bottom: 15px;
+.card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.12); }
+
+.card img {
+    width: 100%; height: 220px; object-fit: contain; /* Muestra toda la foto sin cortarla */
+    background: #fff; border-bottom: 3px solid #FF6600;
+    padding: 10px;
 }
 
-.btn-whatsapp {
-    background-color: #25D366; color: white; border: none;
-    padding: 12px; width: 100%; border-radius: 6px;
-    font-weight: bold; cursor: pointer; display: flex;
-    justify-content: center; align-items: center; gap: 8px;
-    font-size: 1rem; transition: 0.2s;
+/* Etiquetas */
+.cat-badge {
+    position: absolute; top: 15px; left: 15px;
+    background: #002E5D; color: white; padding: 5px 12px;
+    font-size: 0.75rem; font-weight: bold; border-radius: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
-.btn-whatsapp:hover { background-color: #1ebe57; }
 
-footer { text-align: center; padding: 30px; color: #777; font-size: 0.9rem; margin-top: 40px; border-top: 1px solid #ddd;}
+/* Info del Producto */
+.info { padding: 20px; text-align: center; display: flex; flex-direction: column; height: calc(100% - 220px); }
+.name { font-size: 1.1rem; color: #333; margin-bottom: 10px; flex-grow: 1; font-weight: 700; }
+.price { font-size: 1.4rem; color: #002E5D; font-weight: bold; margin-bottom: 15px; }
+
+/* Botón de Pedir */
+.btn-wsp {
+    background: linear-gradient(45deg, #25D366, #128C7E); /* Degradado verde */
+    color: white; border: none; padding: 12px; width: 100%;
+    border-radius: 8px; font-weight: bold; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    font-size: 1rem; transition: filter 0.3s;
+}
+.btn-wsp:hover { filter: brightness(1.1); }
+
+/* Footer */
+footer { background: #002E5D; color: white; text-align: center; padding: 30px; margin-top: 60px; font-size: 0.9rem;}
+.footer-content p { margin: 5px 0; }
+.footer-content i { color: #FF6600; margin-right: 10px; }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .nav-contact span.email-text { display: none; } /* Oculta el correo texto en celular */
+    header h1 { font-size: 2rem; }
+}
