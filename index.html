@@ -4,90 +4,225 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Distribuidora Muñoz | Tienda Oficial</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* --- MEJORAS PARA MÓVIL Y UX --- */
+        /* =========================================
+           ESTILOS GENERALES Y RESET
+           ========================================= */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: #f4f7f6; color: #333; padding-bottom: 80px; } /* Padding inferior para el botón flotante */
+        input, button, select { font-size: 16px; outline: none; } /* Evita zoom en inputs en iOS */
+
+        /* Colores Corporativos */
+        :root {
+            --azul: #002E5D;
+            --naranja: #FF6600;
+            --verde: #25D366;
+            --gris-claro: #f8f9fa;
+        }
+
+        /* =========================================
+           NAVEGACIÓN Y HEADER
+           ========================================= */
+        nav {
+            background: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100;
+        }
+        .logo-img { height: 50px; width: auto; object-fit: contain; }
+        .btn-nav-wsp { color: var(--verde); font-size: 1.5rem; text-decoration: none; display: flex; align-items: center; gap: 8px; font-weight: 600; }
+        .btn-nav-wsp span { display: none; font-size: 1rem; } /* Texto oculto en móvil */
+
+        header {
+            /* Fondo con imagen de almacén y superposición azul */
+            background: linear-gradient(rgba(0,46,93,0.85), rgba(0,46,93,0.85)), url('https://source.unsplash.com/1600x900/?warehouse,logistics');
+            background-size: cover; background-position: center;
+            color: white; text-align: center; 
+            padding: 60px 20px 80px 20px; /* Más espacio abajo para el buscador */
+        }
+        header h1 { font-size: 1.8rem; margin-bottom: 10px; font-weight: 800; }
+
+        /* =========================================
+           BUSCADOR Y FILTROS
+           ========================================= */
+        .search-container { text-align: center; margin-top: -30px; position: relative; z-index: 10; padding: 0 20px; }
+        .search-input {
+            width: 100%; max-width: 500px; padding: 15px 25px; border-radius: 50px;
+            border: 2px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); font-size: 1rem;
+            transition: all 0.3s;
+        }
+        .search-input:focus { border-color: var(--naranja); }
+
+        .container { max-width: 1100px; margin: 30px auto; padding: 0 15px; }
+
+        /* Filtros con scroll horizontal suave en móvil */
+        .category-filters {
+            display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px;
+            -webkit-overflow-scrolling: touch; scrollbar-width: none;
+        }
+        .category-filters::-webkit-scrollbar { display: none; }
+        .cat-btn {
+            flex: 0 0 auto; background: white; border: 1px solid #ddd;
+            padding: 8px 20px; border-radius: 30px; font-weight: 600; color: #666;
+            transition: all 0.2s; cursor: pointer;
+        }
+        .cat-btn.active, .cat-btn:hover { background: var(--azul); color: white; border-color: var(--azul); }
+
+        /* =========================================
+           GRID DE PRODUCTOS (MÓVIL PRIMERO)
+           ========================================= */
+        .grid {
+            display: grid;
+            /* En móvil: 2 columnas, mínimo 150px de ancho cada una */
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .card {
+            background: white; border-radius: 15px; overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.03);
+            display: flex; flex-direction: column; height: 100%; /* Para alinear botones al final */
+            transition: transform 0.3s;
+        }
         
-        /* Ajuste para que no hagan zoom al tocar inputs en celular */
-        input, button, select, textarea { font-size: 16px; }
+        .card-img-wrapper { position: relative; height: 150px; padding: 15px; background: white; text-align: center; border-bottom: 1px solid #eee;}
+        .card img { height: 100%; width: auto; max-width: 100%; object-fit: contain; }
+        .cat-badge { position: absolute; top: 10px; left: 10px; background: var(--azul); color: white; padding: 4px 10px; font-size: 0.7rem; border-radius: 10px; font-weight: bold;}
 
-        /* Buscador más limpio */
-        .search-container { text-align: center; margin: -25px 0 20px 0; position: relative; z-index: 10; padding: 0 15px; }
-        .search-input { width: 100%; max-width: 600px; padding: 15px; border-radius: 50px; border: 1px solid #ddd; outline: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .info { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; }
+        .stock-label { font-size: 0.75rem; font-weight: 700; color: var(--verde); margin-bottom: 5px; display: block; }
+        .stock-label.low { color: #dc3545; }
+        .name { font-size: 0.95rem; font-weight: 700; line-height: 1.3; margin-bottom: 5px; color: var(--azul); flex-grow: 1; }
+        .price { font-size: 1.2rem; color: var(--naranja); font-weight: 800; margin-bottom: 15px; }
 
-        /* Filtros con scroll horizontal en celular */
-        .category-filters { display: flex; gap: 10px; overflow-x: auto; padding: 10px 15px; white-space: nowrap; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-        .category-filters::-webkit-scrollbar { display: none; } /* Ocultar barra scroll */
-        .cat-btn { flex: 0 0 auto; background: white; border: 1px solid #ddd; padding: 8px 18px; border-radius: 20px; font-weight: 600; color: #555; }
-        .cat-btn.active { background: #002E5D; color: white; border-color: #002E5D; }
+        /* Controles de cantidad en la tarjeta */
+        .qty-controls-card {
+            display: flex; align-items: center; justify-content: space-between;
+            background: var(--gris-claro); border-radius: 8px; padding: 5px; margin-bottom: 10px;
+        }
+        .qty-btn-mini { width: 28px; height: 28px; background: white; border: 1px solid #ddd; border-radius: 50%; color: var(--azul); font-weight: bold; cursor: pointer; }
+        .qty-input-mini { width: 40px; text-align: center; background: transparent; border: none; font-weight: bold; color: var(--azul); }
 
-        /* GRID RESPONSIVO (2 columnas en celular) */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; padding: 0 10px; }
-        
-        /* Ajustes de tarjeta para móvil */
-        .card { display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
-        .card img { height: 160px; object-fit: contain; background: white; padding: 10px; }
-        .info { padding: 12px; }
-        .name { font-size: 0.95rem; line-height: 1.2; margin-bottom: 5px; height: 38px; overflow: hidden; }
-        .stock-label { font-size: 0.75rem; color: #28a745; font-weight: bold; margin-bottom: 5px; display: block; }
-        .stock-low { color: #dc3545; }
-
-        /* CONTROLES DE CANTIDAD EN TARJETA */
-        .controls { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; background: #f8f9fa; border-radius: 8px; padding: 4px; }
-        .qty-btn { width: 30px; height: 30px; background: white; border: 1px solid #ddd; border-radius: 50%; font-weight: bold; color: #002E5D; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .cant-input { width: 40px; border: none; background: transparent; text-align: center; font-weight: bold; -moz-appearance: textfield; }
-        
-        /* BOTÓN AGREGAR */
-        .btn-add { background: #002E5D; color: white; border: none; padding: 10px; width: 100%; border-radius: 8px; font-weight: bold; font-size: 0.9rem; }
+        .btn-add {
+            background: var(--azul); color: white; border: none; padding: 12px; width: 100%;
+            border-radius: 10px; font-weight: bold; cursor: pointer; display: flex;
+            align-items: center; justify-content: center; gap: 8px; transition: 0.2s;
+        }
+        .btn-add:hover { background: #001a35; }
         .btn-add:disabled { background: #ccc; cursor: not-allowed; }
 
-        /* --- VENTANA MODAL DEL CARRITO (NUEVO) --- */
+        /* =========================================
+           MEJORAS PARA COMPUTADORA (DESKTOP)
+           ========================================= */
+        @media (min-width: 992px) {
+            /* Barra y Header más compactos */
+            nav { padding: 15px 40px; }
+            .btn-nav-wsp span { display: inline; } /* Mostrar texto WhatsApp */
+            header { padding: 40px 20px 70px 20px; min-height: 200px; }
+            header h1 { font-size: 2.5rem; }
+            
+            /* Contenedor más estrecho y centrado */
+            .container { max-width: 1000px; padding: 0 20px; }
+            
+            /* Grid más espacioso pero controlado */
+            .grid { 
+                grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); 
+                gap: 25px; 
+            }
+            
+            /* Tarjetas más grandes */
+            .card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+            .card-img-wrapper { height: 180px; }
+            .name { font-size: 1.1rem; }
+        }
+
+        /* =========================================
+           CARRITO (MODAL MEJORADO)
+           ========================================= */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); z-index: 5000; display: none;
-            justify-content: center; align-items: end; /* En celular sale desde abajo */
+            background: rgba(0,0,0,0.5); z-index: 2000;
+            display: none; justify-content: center; align-items: center; /* Centrado en PC */
+            backdrop-filter: blur(3px); /* Efecto borroso de fondo */
         }
         .modal-overlay.open { display: flex; }
 
         .modal-content {
-            background: white; width: 100%; max-width: 500px;
-            height: 85vh; /* Ocupa casi toda la pantalla */
-            border-radius: 20px 20px 0 0;
-            padding: 20px; display: flex; flex-direction: column;
-            animation: slideUp 0.3s ease-out;
+            background: white; width: 90%; max-width: 450px; /* Más angosto en PC */
+            max-height: 90vh; border-radius: 20px;
+            display: flex; flex-direction: column;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            animation: popIn 0.3s ease-out;
         }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 
-        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 10px; }
-        .modal-body { flex-grow: 1; overflow-y: auto; }
-        .modal-footer { border-top: 1px solid #eee; padding-top: 15px; }
+        .modal-header {
+            padding: 20px; border-bottom: 1px solid #eee;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .modal-header h2 { font-size: 1.3rem; color: var(--azul); }
+        .close-btn { background: none; border: none; font-size: 1.8rem; color: #999; cursor: pointer; }
 
-        /* Items del carrito */
-        .cart-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f9f9f9; }
-        .cart-item img { width: 50px; height: 50px; object-fit: contain; }
-        .cart-item-details { flex-grow: 1; }
-        .cart-item-title { font-size: 0.9rem; font-weight: bold; display: block; }
-        .cart-item-price { font-size: 0.85rem; color: #666; }
-        .cart-controls { display: flex; align-items: center; gap: 5px; }
-        .btn-delete { color: #dc3545; background: none; border: none; padding: 5px; cursor: pointer; }
+        .modal-body { padding: 20px; overflow-y: auto; flex-grow: 1; }
 
-        /* Botón Confirmar */
-        .btn-confirm {
-            background: #25D366; color: white; width: 100%; padding: 15px;
-            border: none; border-radius: 10px; font-weight: bold; font-size: 1.1rem;
+        /* Estilo de items en el carrito */
+        .cart-item {
+            display: flex; align-items: center; gap: 15px;
+            padding-bottom: 15px; margin-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .cart-item img { width: 60px; height: 60px; object-fit: contain; border-radius: 8px; border: 1px solid #eee; padding: 5px;}
+        .cart-details { flex-grow: 1; }
+        .cart-title { font-weight: 700; color: var(--azul); display: block; margin-bottom: 4px; font-size: 0.95rem;}
+        .cart-price { color: var(--naranja); font-weight: bold; }
+
+        .cart-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+        .qty-selector-cart {
+            display: flex; align-items: center; background: var(--gris-claro); border-radius: 20px; padding: 2px;
+        }
+        .qty-btn-cart { width: 30px; height: 30px; background: white; border: none; border-radius: 50%; font-weight: bold; color: var(--azul); cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .qty-val-cart { width: 35px; text-align: center; font-weight: bold; }
+        .btn-delete { color: #ff4444; background: none; border: none; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 5px;}
+
+        .modal-footer { padding: 20px; border-top: 1px solid #eee; background: #fafafa; border-radius: 0 0 20px 20px; }
+        .total-row { display: flex; justify-content: space-between; font-size: 1.2rem; font-weight: bold; color: var(--azul); margin-bottom: 20px; }
+        .total-amount { color: var(--naranja); font-size: 1.5rem; }
+        .btn-checkout {
+            background: var(--verde); color: white; width: 100%; padding: 16px;
+            border: none; border-radius: 12px; font-weight: 800; font-size: 1.1rem;
             display: flex; justify-content: center; align-items: center; gap: 10px;
+            transition: background 0.3s;
         }
+        .btn-checkout:hover { background: #1ebe57; }
 
-        /* Float button fix */
-        .cart-float { bottom: 20px; right: 20px; z-index: 4000; }
+        /* UI Elements */
+        .cart-float {
+            position: fixed; bottom: 20px; right: 20px;
+            background: var(--naranja); color: white;
+            padding: 12px 20px; border-radius: 50px;
+            display: flex; align-items: center; gap: 10px;
+            font-weight: bold; box-shadow: 0 5px 20px rgba(255, 102, 0, 0.4);
+            cursor: pointer; z-index: 1500; transition: transform 0.2s;
+        }
+        .cart-float:hover { transform: scale(1.05); }
+        .cart-count { background: white; color: var(--naranja); padding: 2px 8px; border-radius: 10px; font-size: 0.85rem; }
+
+        .toast {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
+            background: var(--azul); color: white; padding: 12px 25px;
+            border-radius: 30px; font-weight: 600; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 3000; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex; align-items: center; gap: 10px;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
         
-        /* Responsive PC */
-        @media(min-width: 768px) {
-            .modal-overlay { align-items: center; }
-            .modal-content { height: auto; max-height: 80vh; border-radius: 15px; }
-            .grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+        footer { text-align: center; padding: 30px; color: #777; font-size: 0.9rem; margin-top: 40px; }
+
+        /* Ajuste modal en móvil: pegado abajo */
+        @media (max-width: 767px) {
+            .modal-overlay { align-items: flex-end; }
+            .modal-content { width: 100%; max-width: none; border-radius: 25px 25px 0 0; max-height: 85vh; animation: slideUp 0.3s ease-out; }
+            @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         }
     </style>
 </head>
@@ -96,51 +231,49 @@
     <div id="cart-modal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Tu Canasta</h2>
-                <button onclick="cerrarCarrito()" style="background:none; border:none; font-size:1.5rem;">&times;</button>
+                <h2>Tu Canasta de Compras</h2>
+                <button class="close-btn" onclick="cerrarCarrito()">&times;</button>
             </div>
             <div class="modal-body" id="cart-items-container">
-                <p style="text-align:center; color:#888; margin-top:50px;">Tu canasta está vacía</p>
-            </div>
-            <div class="modal-footer">
-                <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-weight:bold; font-size:1.2rem;">
-                    <span>Total:</span>
-                    <span id="cart-total">S/ 0.00</span>
                 </div>
-                <button class="btn-confirm" onclick="enviarPedidoWhatsApp()">
-                    <i class="fa-brands fa-whatsapp"></i> ENVIAR PEDIDO
+            <div class="modal-footer">
+                <div class="total-row">
+                    <span>Total Estimado:</span>
+                    <span class="total-amount" id="cart-total">S/ 0.00</span>
+                </div>
+                <button class="btn-checkout" onclick="enviarPedidoWhatsApp()">
+                    <i class="fa-brands fa-whatsapp"></i> CONFIRMAR PEDIDO POR WHATSAPP
                 </button>
             </div>
         </div>
     </div>
 
-    <div id="toast" class="toast"><i class="fa-solid fa-check"></i> Agregado</div>
+    <div id="toast" class="toast"><i class="fa-solid fa-circle-check" style="color: var(--verde)"></i> Producto agregado</div>
 
     <div class="cart-float" onclick="abrirCarrito()">
         <i class="fa-solid fa-cart-shopping"></i>
-        <span id="cart-label" style="display:none"> Ver</span> <span id="cart-counter" class="cart-count">0</span>
+        <span class="cart-count" id="cart-counter">0</span>
     </div>
 
     <nav>
-        <a href="."><img src="logo.jpg" alt="Logo" class="logo-img" onerror="this.src='logo.png'"></a>
-        <div class="nav-contact">
-            <a href="https://wa.me/51964604628" class="btn-nav-wsp" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
-        </div>
+        <a href="."><img src="logo.jpg" alt="Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/150x50?text=TU+LOGO'"></a>
+        <a href="https://wa.me/51999999999" class="btn-nav-wsp" target="_blank">
+            <i class="fa-brands fa-whatsapp"></i> <span>Atención al Cliente</span>
+        </a>
     </nav>
 
     <header>
-        <div class="hero-content">
-            <h1>Abastece tu negocio</h1>
-        </div>
+        <h1>MAYORISTA DE ALIMENTOS</h1>
+        <p>Abastece tu negocio con los mejores precios del mercado.</p>
     </header>
 
     <div class="search-container">
-        <input type="text" id="buscador" class="search-input" placeholder="🔍 Buscar producto...">
+        <input type="text" id="buscador" class="search-input" placeholder="🔍 ¿Qué estás buscando hoy? (Ej. Arroz, Aceite...)">
     </div>
 
-    <section id="catalogo" class="container">
+    <section class="container">
         <div class="category-filters">
-            <button class="cat-btn active" onclick="filtrar('Todo')">Todos</button>
+            <button class="cat-btn active" onclick="filtrar('Todo')">Ver Todos</button>
             <button class="cat-btn" onclick="filtrar('Sacos')">Sacos</button>
             <button class="cat-btn" onclick="filtrar('Aceites')">Aceites</button>
             <button class="cat-btn" onclick="filtrar('Fideos')">Fideos</button>
@@ -150,35 +283,33 @@
     </section>
 
     <footer>
-        <div class="footer-content">
-            <p>&copy; 2026 Distribuidora Muñoz</p>
-        </div>
+        <p>&copy; 2026 Distribuidora Muñoz. Precios sujetos a variación.</p>
     </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const MI_WHATSAPP = "51964604628"; // PON TU NÚMERO
+            const MI_WHATSAPP = "51999999999"; // ¡PON TU NÚMERO REAL AQUÍ!
             let carrito = [];
 
-            // --- AQUÍ DEFINES TU STOCK ---
-            // 'stock' es la cantidad máxima que tienes en almacén.
+            // --- BASE DE DATOS DE PRODUCTOS Y STOCK ---
+            // Edita el campo 'stock' según tu inventario real.
             const productos = [
                 { id: 1, nombre: "Azúcar Andahuasi (50kg)", precio: 119.00, cat: "Sacos", img: "azucar-andahuasi.jpg", stock: 50 },
                 { id: 2, nombre: "Harina Doña Angélica (50kg)", precio: 108.00, cat: "Sacos", img: "harina-angelica.jpg", stock: 30 },
                 { id: 3, nombre: "Arroz Costeño (50kg)", precio: null, cat: "Sacos", img: "arroz-costeno.jpg", stock: 100 },
                 { id: 4, nombre: "Aceite Miramar (12unid)", precio: 64.00, cat: "Aceites", img: "aceite-miramar.jpg", stock: 45 },
                 { id: 5, nombre: "Aceite Friemass (12unid)", precio: 64.00, cat: "Aceites", img: "aceite-friemass.jpg", stock: 25 },
-                { id: 6, nombre: "Aceite Bucanero (12unid)", precio: 57.00, cat: "Aceites", img: "aceite-bucanero.jpg", stock: 20 },
+                { id: 6, nombre: "Aceite Bucanero (12unid)", precio: 57.00, cat: "Aceites", img: "aceite-bucanero.jpg", stock: 5 }, // Ejemplo stock bajo
                 { id: 7, nombre: "Spaghetti Anita (10kg)", precio: 31.00, cat: "Fideos", img: "spaghetti-anita.jpg", stock: 60 },
                 { id: 8, nombre: "Codo Rayado Anita (5kg)", precio: 15.50, cat: "Fideos", img: "codo-anita.jpg", stock: 40 },
-                { id: 9, nombre: "Canuto Rayado Anita (5kg)", precio: 15.50, cat: "Fideos", img: "canuto-anita.jpg", stock: 40 },
+                { id: 9, nombre: "Canuto Rayado Anita (5kg)", precio: 15.50, cat: "Fideos", img: "canuto-anita.jpg", stock: 0 }, // Ejemplo Agotado
                 { id: 10, nombre: "Leche Gloria (Lata)", precio: null, cat: "Lácteos", img: "leche-gloria.jpg", stock: 200 }
             ];
 
             const contenedor = document.getElementById('grid-productos');
             const buscador = document.getElementById('buscador');
 
-            // --- RENDERIZAR PRODUCTOS ---
+            // --- RENDERIZADO DE PRODUCTOS ---
             function renderizarProductos(lista) {
                 contenedor.innerHTML = '';
                 lista.forEach((p) => {
@@ -186,28 +317,28 @@
                     card.className = 'card';
                     
                     const precioTxt = p.precio ? `S/ ${p.precio.toFixed(2)}` : "Cotizar";
-                    const stockClass = p.stock < 10 ? 'stock-low' : ''; // Rojo si queda poco
-                    const stockTxt = p.stock > 0 ? `Stock: ${p.stock}` : 'AGOTADO';
-                    const disabled = p.stock === 0 ? 'disabled' : '';
+                    const stockLow = p.stock > 0 && p.stock <= 10 ? 'low' : '';
+                    const stockTxt = p.stock > 0 ? `Stock: ${p.stock} unid.` : 'AGOTADO';
+                    const isAgotado = p.stock === 0;
 
                     card.innerHTML = `
-                        <div style="position:relative">
+                        <div class="card-img-wrapper">
                             <span class="cat-badge">${p.cat}</span>
-                            <img src="${p.img}" onerror="this.src='https://via.placeholder.com/200?text=Foto'" alt="${p.nombre}">
+                            <img src="${p.img}" onerror="this.src='https://via.placeholder.com/200?text=Sin+Foto'" alt="${p.nombre}">
                         </div>
                         <div class="info">
-                            <span class="stock-label ${stockClass}">${stockTxt}</span>
+                            <span class="stock-label ${stockLow}">${stockTxt}</span>
                             <h3 class="name">${p.nombre}</h3>
                             <div class="price">${precioTxt}</div>
                             
-                            <div class="controls">
-                                <button class="qty-btn" onclick="ajustarInput(${p.id}, -1)">-</button>
-                                <input type="number" id="input-${p.id}" value="1" min="1" max="${p.stock}" class="cant-input" readonly>
-                                <button class="qty-btn" onclick="ajustarInput(${p.id}, 1)">+</button>
+                            <div class="qty-controls-card" style="${isAgotado ? 'opacity:0.5; pointer-events:none;' : ''}">
+                                <button class="qty-btn-mini" onclick="ajustarInputCard(${p.id}, -1)">-</button>
+                                <input type="number" id="input-${p.id}" value="1" min="1" max="${p.stock}" class="qty-input-mini" readonly>
+                                <button class="qty-btn-mini" onclick="ajustarInputCard(${p.id}, 1)">+</button>
                             </div>
 
-                            <button class="btn-add" onclick="agregar(${p.id})" ${disabled}>
-                                ${p.stock > 0 ? 'AGREGAR' : 'SIN STOCK'}
+                            <button class="btn-add" onclick="agregar(${p.id})" ${isAgotado ? 'disabled' : ''}>
+                                <i class="fa-solid fa-cart-plus"></i> ${isAgotado ? 'SIN STOCK' : 'AGREGAR'}
                             </button>
                         </div>
                     `;
@@ -217,32 +348,27 @@
 
             renderizarProductos(productos);
 
-            // --- AJUSTAR INPUT EN LA TARJETA ---
-            window.ajustarInput = function(id, cambio) {
+            // --- LÓGICA DE INPUTS EN TARJETA ---
+            window.ajustarInputCard = function(id, cambio) {
                 const input = document.getElementById(`input-${id}`);
                 const prod = productos.find(p => p.id === id);
                 let val = parseInt(input.value) + cambio;
-                
-                // Validar límites
                 if(val < 1) val = 1;
-                if(val > prod.stock) val = prod.stock; // No deja pasar del stock
-                
+                if(val > prod.stock) val = prod.stock;
                 input.value = val;
             };
 
-            // --- AGREGAR AL CARRITO CON VALIDACIÓN DE STOCK ---
+            // --- AGREGAR AL CARRITO ---
             window.agregar = function(id) {
                 const prod = productos.find(p => p.id === id);
                 const input = document.getElementById(`input-${id}`);
                 const cantidadDeseada = parseInt(input.value);
                 
-                // Verificar si ya está en el carrito
                 const itemEnCarrito = carrito.find(item => item.id === id);
-                const cantidadEnCarrito = itemEnCarrito ? itemEnCarrito.cantidad : 0;
+                const cantidadActual = itemEnCarrito ? itemEnCarrito.cantidad : 0;
 
-                // VALIDACIÓN IMPORTANTE
-                if (cantidadDeseada + cantidadEnCarrito > prod.stock) {
-                    alert(`¡Lo sentimos! Solo nos quedan ${prod.stock} unidades de este producto.`);
+                if (cantidadDeseada + cantidadActual > prod.stock) {
+                    alert(`Solo disponemos de ${prod.stock} unidades de este producto.`);
                     return;
                 }
 
@@ -251,23 +377,31 @@
                 } else {
                     carrito.push({ ...prod, cantidad: cantidadDeseada });
                 }
-
-                actualizarContador();
+                
+                actualizarUI();
                 mostrarToast();
-                input.value = 1; // Resetear
+                input.value = 1; // Reset
             };
 
-            // --- FUNCIONES DEL MODAL (CARRITO EDITABLE) ---
+            // --- FUNCIONES DEL MODAL (CARRITO) ---
             window.abrirCarrito = function() {
-                const modal = document.getElementById('cart-modal');
+                dibujarCarrito();
+                document.getElementById('cart-modal').classList.add('open');
+                document.body.style.overflow = 'hidden'; // Evita scroll de fondo
+            };
+
+            window.cerrarCarrito = function() {
+                document.getElementById('cart-modal').classList.remove('open');
+                document.body.style.overflow = 'auto';
+            };
+
+            function dibujarCarrito() {
                 const container = document.getElementById('cart-items-container');
                 const totalElem = document.getElementById('cart-total');
-                
-                modal.classList.add('open');
                 container.innerHTML = '';
 
                 if(carrito.length === 0) {
-                    container.innerHTML = '<p style="text-align:center; margin-top:50px; color:#999">Tu canasta está vacía</p>';
+                    container.innerHTML = '<div style="text-align:center; padding:50px; color:#999;"><i class="fa-solid fa-cart-shopping" style="font-size:3rem; margin-bottom:20px; opacity:0.3;"></i><p>Tu canasta está vacía</p></div>';
                     totalElem.innerText = 'S/ 0.00';
                     return;
                 }
@@ -277,82 +411,60 @@
                 carrito.forEach((item, index) => {
                     const subtotal = item.precio ? (item.precio * item.cantidad) : 0;
                     totalGeneral += subtotal;
+                    const precioUnit = item.precio ? `S/ ${item.precio.toFixed(2)}` : "Cotizar";
 
-                    const row = document.createElement('div');
-                    row.className = 'cart-item';
-                    row.innerHTML = `
-                        <img src="${item.img}" onerror="this.src='https://via.placeholder.com/50'">
-                        <div class="cart-item-details">
-                            <span class="cart-item-title">${item.nombre}</span>
-                            <span class="cart-item-price">Precio: S/ ${item.precio ? item.precio.toFixed(2) : '--'}</span>
-                        </div>
-                        <div class="cart-controls">
-                            <button class="qty-btn" onclick="cambiarCantCarrito(${index}, -1)">-</button>
-                            <span style="font-weight:bold; width:20px; text-align:center;">${item.cantidad}</span>
-                            <button class="qty-btn" onclick="cambiarCantCarrito(${index}, 1)">+</button>
-                            <button class="btn-delete" onclick="eliminarDelCarrito(${index})"><i class="fa-solid fa-trash"></i></button>
+                    container.innerHTML += `
+                        <div class="cart-item">
+                            <img src="${item.img}" onerror="this.src='https://via.placeholder.com/60'">
+                            <div class="cart-details">
+                                <span class="cart-title">${item.nombre}</span>
+                                <span class="cart-price">${precioUnit} x unidad</span>
+                            </div>
+                            <div class="cart-actions">
+                                <div class="qty-selector-cart">
+                                    <button class="qty-btn-cart" onclick="cambiarCantCarrito(${index}, -1)">-</button>
+                                    <span class="qty-val-cart">${item.cantidad}</span>
+                                    <button class="qty-btn-cart" onclick="cambiarCantCarrito(${index}, 1)">+</button>
+                                </div>
+                                <button class="btn-delete" onclick="eliminarDelCarrito(${index})">
+                                    <i class="fa-solid fa-trash-can"></i> Eliminar
+                                </button>
+                            </div>
                         </div>
                     `;
-                    container.appendChild(row);
                 });
-
                 totalElem.innerText = `S/ ${totalGeneral.toFixed(2)}`;
-            };
-
-            window.cerrarCarrito = function() {
-                document.getElementById('cart-modal').classList.remove('open');
-            };
+            }
 
             window.cambiarCantCarrito = function(index, cambio) {
                 const item = carrito[index];
                 const nuevoValor = item.cantidad + cambio;
-
-                // Validar Stock
-                if(nuevoValor > item.stock) {
-                    alert(`Solo hay ${item.stock} unidades disponibles.`);
-                    return;
-                }
-                
-                if(nuevoValor > 0) {
-                    item.cantidad = nuevoValor;
-                    abrirCarrito(); // Redibujar
-                    actualizarContador();
-                }
+                if(nuevoValor > item.stock) { alert(`Stock máximo: ${item.stock}`); return; }
+                if(nuevoValor > 0) { item.cantidad = nuevoValor; dibujarCarrito(); actualizarUI(); }
             };
 
             window.eliminarDelCarrito = function(index) {
                 carrito.splice(index, 1);
-                abrirCarrito();
-                actualizarContador();
+                dibujarCarrito();
+                actualizarUI();
             };
 
-            // --- ENVIAR A WHATSAPP ---
+            // --- ENVÍO FINAL ---
             window.enviarPedidoWhatsApp = function() {
                 if(carrito.length === 0) return;
-
                 let mensaje = "Hola Distribuidora Muñoz, deseo confirmar mi pedido:%0A%0A";
                 let total = 0;
-
                 carrito.forEach(item => {
-                    const subtotal = item.precio ? (item.precio * item.cantidad) : 0;
-                    total += subtotal;
-                    const precioTxt = item.precio ? `S/ ${item.precio.toFixed(2)}` : "A cotizar";
-                    mensaje += `▪ *(${item.cantidad})* ${item.nombre} - ${precioTxt}%0A`;
+                    total += item.precio ? (item.precio * item.cantidad) : 0;
+                    const precioTxt = item.precio ? `(S/ ${item.precio.toFixed(2)})` : "(A cotizar)";
+                    mensaje += `▪ *${item.cantidad} x* ${item.nombre} ${precioTxt}%0A`;
                 });
-
-                mensaje += `%0A-----------------------------------%0A`;
-                mensaje += `%0A*TOTAL APROX: S/ ${total.toFixed(2)}*%0A`;
-                
+                mensaje += `%0A-----------------------------------%0A💰 *TOTAL APROX: S/ ${total.toFixed(2)}*%0A`;
                 window.open(`https://wa.me/${MI_WHATSAPP}?text=${mensaje}`, '_blank');
-                
-                // Opcional: Limpiar carrito tras enviar
-                // carrito = []; 
-                // actualizarContador();
-                // cerrarCarrito();
             };
 
-            // Funciones auxiliares
-            function actualizarContador() {
+            // --- UTILIDADES ---
+            function actualizarUI() {
                 const count = carrito.reduce((acc, item) => acc + item.cantidad, 0);
                 document.getElementById('cart-counter').innerText = count;
             }
@@ -370,11 +482,9 @@
             window.filtrar = function(cat) {
                 document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
                 event.target.classList.add('active');
-                if(cat === 'Todo') renderizarProductos(productos);
-                else renderizarProductos(productos.filter(p => p.cat === cat));
+                renderizarProductos(cat === 'Todo' ? productos : productos.filter(p => p.cat === cat));
             };
         });
     </script>
 </body>
 </html>
-
