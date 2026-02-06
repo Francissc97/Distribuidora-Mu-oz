@@ -62,32 +62,33 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // --- FUNCIÓN DE ENVÍO MEJORADA ---
+// --- FUNCIÓN DE ENVÍO CORREGIDA ---
     window.enviarPedido = function(producto, precio, inputId) {
-        // Obtenemos la cantidad que escribió el cliente
+        // Obtenemos la cantidad
         const cantidad = document.getElementById(inputId).value;
         
-        let mensaje;
-        
+        // Calculamos total
+        let totalTexto = "";
         if (precio > 0) {
-            // Calculamos el total
             const total = (precio * cantidad).toFixed(2);
-            mensaje = `Hola Distribuidora Muñoz, deseo hacer un pedido:
-📦 *Producto:* ${producto}
-🔢 *Cantidad:* ${cantidad}
-💰 *Precio Unit:* S/ ${precio.toFixed(2)}
-💵 *TOTAL A PAGAR:* S/ ${total}
-
-Quedo a la espera de confirmación.`;
+            totalTexto = "TOTAL A PAGAR: S/ " + total;
         } else {
-            // Si es producto de "Consultar"
-            mensaje = `Hola, deseo cotizar el siguiente pedido:
-📦 *Producto:* ${producto}
-🔢 *Cantidad:* ${cantidad}
-
-¿Me podrían dar el precio final?`;
+            totalTexto = "Solicito cotización final.";
         }
 
-        const url = `https://wa.me/${MI_WHATSAPP}?text=${encodeURIComponent(mensaje)}`;
+        // Construimos el mensaje USANDO %0A para los saltos de línea (Más seguro)
+        // Y usamos texto simple o emojis muy básicos
+        let mensaje = "Hola Distribuidora Muñoz, deseo hacer un pedido:" + "%0A" +
+                      "-----------------------------------" + "%0A" +
+                      "PRODUCTO: " + producto + "%0A" +
+                      "CANTIDAD: " + cantidad + "%0A" +
+                      "PRECIO UNIT: S/ " + precio.toFixed(2) + "%0A" +
+                      "-----------------------------------" + "%0A" +
+                      "💰 " + totalTexto + "%0A" +
+                      "%0A" +
+                      "Quedo a la espera de confirmación.";
+
+        // Abrir WhatsApp
+        const url = `https://wa.me/${MI_WHATSAPP}?text=${mensaje}`;
         window.open(url, '_blank');
     };
-});
