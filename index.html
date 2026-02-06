@@ -3,126 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Distribuidora Muñoz | Catálogo Mayorista</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
+    <title>Distribuidora Muñoz | Tienda Virtual</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* ESTILOS ADICIONALES PARA LA VERSIÓN "TOTTUS/PLAZA VEA" */
+        
+        /* 1. Buscador */
+        .search-container {
+            text-align: center; margin-top: -30px; margin-bottom: 20px; position: relative; z-index: 10;
+        }
+        .search-input {
+            width: 90%; max-width: 600px; padding: 15px 20px;
+            border-radius: 50px; border: 1px solid #ddd;
+            font-size: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            outline: none; transition: 0.3s;
+        }
+        .search-input:focus { border-color: #FF6600; box-shadow: 0 5px 20px rgba(255, 102, 0, 0.2); }
+
+        /* 2. Filtros de Categoría */
+        .category-filters {
+            display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 30px;
+        }
+        .cat-btn {
+            background: white; border: 1px solid #ddd; padding: 8px 15px;
+            border-radius: 20px; cursor: pointer; font-weight: 600; color: #555;
+            transition: 0.3s;
+        }
+        .cat-btn:hover, .cat-btn.active {
+            background: #002E5D; color: white; border-color: #002E5D;
+        }
+
+        /* 3. Botón Flotante de Canasta */
+        .cart-float {
+            position: fixed; bottom: 20px; right: 20px;
+            background-color: #FF6600; color: white;
+            padding: 15px 25px; border-radius: 50px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            cursor: pointer; z-index: 2000;
+            display: flex; align-items: center; gap: 10px;
+            font-weight: bold; transition: transform 0.2s;
+            animation: bounceIn 1s;
+        }
+        .cart-float:hover { transform: scale(1.05); }
+        .cart-count { background: white; color: #FF6600; padding: 2px 8px; border-radius: 10px; font-size: 0.9rem; }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); } 80% { transform: scale(1.1); } 100% { transform: scale(1); }
+        }
+
+        /* 4. Notificación de "Agregado" */
+        .toast {
+            position: fixed; top: 20px; right: 20px;
+            background: #25D366; color: white; padding: 15px 25px;
+            border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transform: translateX(200%); transition: transform 0.3s ease-out;
+            z-index: 3000; font-weight: bold;
+        }
+        .toast.show { transform: translateX(0); }
+
+        /* Ajustes pequeños */
+        .btn-add {
+            background: #002E5D; color: white; border: none; padding: 10px; width: 100%;
+            border-radius: 8px; font-weight: bold; cursor: pointer; display: flex;
+            justify-content: center; align-items: center; gap: 8px; margin-top: 10px;
+        }
+        .btn-add:hover { background: #001a35; }
+        .controls { justify-content: space-between; margin-bottom: 5px; }
+    </style>
 </head>
 <body>
 
+    <div id="toast" class="toast"><i class="fa-solid fa-check"></i> Agregado a la canasta</div>
+
+    <div class="cart-float" onclick="enviarPedidoCompleto()">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span>Ver Canasta</span>
+        <span id="cart-counter" class="cart-count">0</span>
+    </div>
+
     <nav>
-        <a href="." title="Recargar página">
-            <img src="logo.jpg" alt="Distribuidora Muñoz" class="logo-img" onerror="this.src='logo.png'">
-        </a>
-        
+        <a href="." title="Recargar"><img src="logo.jpg" alt="Distribuidora Muñoz" class="logo-img" onerror="this.src='logo.png'"></a>
         <div class="nav-contact">
             <a href="https://wa.me/51964604628" class="btn-nav-wsp" target="_blank">
-                <i class="fa-brands fa-whatsapp"></i> Contacto Directo
+                <i class="fa-brands fa-whatsapp"></i> Atención al Cliente
             </a>
         </div>
     </nav>
 
     <header>
         <div class="hero-content">
-            <h1>Abastece tu negocio con los mejores precios</h1>
+            <h1>Abastece tu negocio</h1>
             <p>Distribución mayorista de alimentos de primera necesidad.</p>
-            <a href="#catalogo" class="btn-cta">VER CATÁLOGO</a>
         </div>
     </header>
 
-    <section class="benefits-bar">
-        <div class="benefit-item">
-            <i class="fa-solid fa-truck-fast"></i>
-            <span>Logística Propia</span>
-        </div>
-        <div class="benefit-item">
-            <i class="fa-solid fa-money-bill-1-wave"></i>
-            <span>Precios de Mayorista</span>
-        </div>
-        <div class="benefit-item">
-            <i class="fa-solid fa-medal"></i>
-            <span>Garantía Total</span>
-        </div>
-    </section>
+    <div class="search-container">
+        <input type="text" id="buscador" class="search-input" placeholder="🔍 ¿Qué producto estás buscando hoy? (Ej: Arroz, Aceite...)">
+    </div>
 
     <section id="catalogo" class="container">
-        <h2>Nuestros Productos</h2>
-        <div id="grid-productos" class="grid">
-            <p style="text-align:center; width:100%; font-size:1.2rem; color:#666;">
-                <i class="fa-solid fa-spinner fa-spin"></i> Cargando productos...
-            </p>
+        
+        <div class="category-filters" id="filtros">
+            <button class="cat-btn active" onclick="filtrar('Todo')">Todos</button>
+            <button class="cat-btn" onclick="filtrar('Sacos')">Sacos</button>
+            <button class="cat-btn" onclick="filtrar('Aceites')">Aceites</button>
+            <button class="cat-btn" onclick="filtrar('Fideos')">Fideos</button>
+            <button class="cat-btn" onclick="filtrar('Lácteos')">Lácteos</button>
         </div>
+
+        <div id="grid-productos" class="grid"></div>
     </section>
 
     <footer>
         <div class="footer-content">
             <p><strong>Distribuidora Muñoz</strong></p>
-            <p><i class="fa-solid fa-location-dot"></i> Huánuco, Perú</p>
-            <p style="margin-top: 20px; font-size: 0.8rem;">&copy; 2026 Todos los derechos reservados.</p>
+            <p>&copy; 2026 Todos los derechos reservados.</p>
         </div>
     </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            console.log("Iniciando catálogo...");
+            const MI_WHATSAPP = "51964604628"; // ¡PON TU NÚMERO AQUÍ!
+            let carrito = []; // Aquí guardaremos los productos
 
-            // --- 1. CONFIGURACIÓN: ¡PON TU NÚMERO AQUÍ! ---
-            const MI_WHATSAPP = "51964604628"; 
-
-            // --- 2. TUS PRODUCTOS ---
+            // TUS PRODUCTOS
             const productos = [
-                // SACOS
                 { id: 1, nombre: "Azúcar Andahuasi (50kg)", precio: 119.00, cat: "Sacos", img: "azucar-andahuasi.jpg" },
                 { id: 2, nombre: "Harina Doña Angélica (50kg)", precio: 108.00, cat: "Sacos", img: "harina-angelica.jpg" },
                 { id: 3, nombre: "Arroz Costeño (50kg)", precio: null, cat: "Sacos", img: "arroz-costeno.jpg" },
-
-                // ACEITES
                 { id: 4, nombre: "Aceite Miramar (Caja 12unid)", precio: 64.00, cat: "Aceites", img: "aceite-miramar.jpg" },
                 { id: 5, nombre: "Aceite Friemass (Caja 12unid)", precio: 64.00, cat: "Aceites", img: "aceite-friemass.jpg" },
                 { id: 6, nombre: "Aceite Bucanero (Caja 12unid)", precio: 57.00, cat: "Aceites", img: "aceite-bucanero.jpg" },
-
-                // FIDEOS Y OTROS
                 { id: 7, nombre: "Spaghetti Anita (10kg)", precio: 31.00, cat: "Fideos", img: "spaghetti-anita.jpg" },
                 { id: 8, nombre: "Codo Rayado Anita (5kg)", precio: 15.50, cat: "Fideos", img: "codo-anita.jpg" },
                 { id: 9, nombre: "Canuto Rayado Anita (5kg)", precio: 15.50, cat: "Fideos", img: "canuto-anita.jpg" },
-                { id: 10, nombre: "Plumita Anita (5kg)", precio: 15.50, cat: "Fideos", img: "plumita-anita.jpg" },
-                { id: 11, nombre: "Cabello de Ángel (5kg)", precio: 15.50, cat: "Fideos", img: "cabello-angel.jpg" },
-                { id: 12, nombre: "Leche Gloria (Lata)", precio: null, cat: "Lácteos", img: "leche-gloria.jpg" },
-                { id: 13, nombre: "Sal Marina (250g)", precio: null, cat: "Abarrotes", img: "sal-marina.jpg" }
+                { id: 10, nombre: "Leche Gloria (Lata)", precio: null, cat: "Lácteos", img: "leche-gloria.jpg" }
             ];
 
             const contenedor = document.getElementById('grid-productos');
-            
-            if(contenedor) {
-                contenedor.innerHTML = ''; // Borra el mensaje de carga
+            const buscador = document.getElementById('buscador');
 
-                productos.forEach((p, index) => {
+            // FUNCIÓN PARA PINTAR PRODUCTOS
+            function renderizarProductos(lista) {
+                contenedor.innerHTML = '';
+                lista.forEach((p, index) => {
                     const card = document.createElement('div');
                     card.className = 'card';
-                    card.style.animationDelay = `${index * 0.1}s`;
+                    card.style.animationDelay = `${index * 0.05}s`;
 
-                    // Precio visual
-                    const precioMostrado = p.precio ? `S/ ${p.precio.toFixed(2)}` : "Consultar";
-                    // Precio para cálculos
-                    const precioCalc = p.precio ? p.precio : 0;
+                    const precioTxt = p.precio ? `S/ ${p.precio.toFixed(2)}` : "Consultar";
                     const inputId = `cant-${p.id}`;
 
                     card.innerHTML = `
                         <div style="position:relative;">
                             <span class="cat-badge">${p.cat}</span>
-                            <img src="${p.img}" onerror="this.src='https://via.placeholder.com/300x250?text=Sin+Imagen'" alt="${p.nombre}">
+                            <img src="${p.img}" onerror="this.src='https://via.placeholder.com/300x250?text=Imagen'" alt="${p.nombre}">
                         </div>
                         <div class="info">
                             <h3 class="name">${p.nombre}</h3>
-                            <div class="price" style="${!p.precio ? 'color:#FF6600' : ''}">${precioMostrado}</div>
+                            <div class="price" style="${!p.precio ? 'color:#FF6600' : ''}">${precioTxt}</div>
                             
                             <div class="controls">
-                                <label>Cant:</label>
+                                <label>Cantidad:</label>
                                 <input type="number" id="${inputId}" value="1" min="1" class="cant-input">
                             </div>
 
-                            <button class="btn-wsp" onclick="enviarPedido('${p.nombre}', ${precioCalc}, '${inputId}')">
-                                <i class="fa-brands fa-whatsapp"></i> PEDIR
+                            <button class="btn-add" onclick="agregarAlCarrito(${p.id})">
+                                <i class="fa-solid fa-cart-plus"></i> AGREGAR
                             </button>
                         </div>
                     `;
@@ -130,35 +179,84 @@
                 });
             }
 
-            // FUNCIÓN DE ENVÍO A WHATSAPP
-            window.enviarPedido = function(producto, precio, inputId) {
-                const input = document.getElementById(inputId);
-                const cantidad = input ? input.value : 1;
-                
-                let mensaje = "";
-                let totalTexto = "";
+            // CARGAR TODO AL INICIO
+            renderizarProductos(productos);
 
-                if (precio > 0) {
-                    const total = (precio * cantidad).toFixed(2);
-                    totalTexto = "TOTAL A PAGAR: S/ " + total;
-                    
-                    // Usamos %0A para saltos de línea (Funciona siempre)
-                    mensaje = "Hola Distribuidora Muñoz, deseo hacer un pedido:" + "%0A" +
-                              "-----------------------------------" + "%0A" +
-                              "PRODUCTO: " + producto + "%0A" +
-                              "CANTIDAD: " + cantidad + "%0A" +
-                              "PRECIO UNIT: S/ " + precio.toFixed(2) + "%0A" +
-                              "-----------------------------------" + "%0A" +
-                              "%0A" + totalTexto + "%0A" +
-                              "%0A" +
-                              "Quedo a la espera de confirmación.";
+            // LOGICA DEL BUSCADOR
+            buscador.addEventListener('input', (e) => {
+                const texto = e.target.value.toLowerCase();
+                const filtrados = productos.filter(p => p.nombre.toLowerCase().includes(texto));
+                renderizarProductos(filtrados);
+            });
+
+            // LOGICA DE FILTROS CATEGORIA
+            window.filtrar = function(categoria) {
+                // Estilo botones
+                document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+                event.target.classList.add('active');
+
+                if(categoria === 'Todo') {
+                    renderizarProductos(productos);
                 } else {
-                    mensaje = "Hola, deseo cotizar:" + "%0A" +
-                              "PRODUCTO: " + producto + "%0A" +
-                              "CANTIDAD: " + cantidad + "%0A" +
-                              "%0A" +
-                              "¿Me podrían dar el precio final?";
+                    const filtrados = productos.filter(p => p.cat === categoria);
+                    renderizarProductos(filtrados);
                 }
+            };
+
+            // LOGICA CARRITO
+            window.agregarAlCarrito = function(id) {
+                const prod = productos.find(p => p.id === id);
+                const input = document.getElementById(`cant-${id}`);
+                const cantidad = parseInt(input.value);
+
+                if(cantidad > 0) {
+                    // Buscar si ya existe en el carrito
+                    const existente = carrito.find(item => item.id === id);
+                    if(existente) {
+                        existente.cantidad += cantidad;
+                    } else {
+                        carrito.push({ ...prod, cantidad: cantidad });
+                    }
+                    
+                    actualizarContador();
+                    mostrarToast();
+                    input.value = 1; // Resetear input
+                }
+            };
+
+            function actualizarContador() {
+                const count = carrito.reduce((acc, item) => acc + item.cantidad, 0);
+                document.getElementById('cart-counter').innerText = count;
+            }
+
+            function mostrarToast() {
+                const toast = document.getElementById('toast');
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2000);
+            }
+
+            // ENVIAR PEDIDO COMPLETO A WHATSAPP
+            window.enviarPedidoCompleto = function() {
+                if(carrito.length === 0) {
+                    alert("Tu canasta está vacía. Agrega productos primero.");
+                    return;
+                }
+
+                let mensaje = "Hola Distribuidora Muñoz, deseo realizar el siguiente pedido:%0A%0A";
+                let totalGeneral = 0;
+
+                carrito.forEach(item => {
+                    const subtotal = item.precio ? (item.precio * item.cantidad) : 0;
+                    totalGeneral += subtotal;
+                    
+                    const precioUnit = item.precio ? `(S/ ${item.precio.toFixed(2)})` : "(Consultar)";
+                    
+                    mensaje += `▪ *${item.cantidad} x ${item.nombre}* %0A   ${precioUnit}%0A`;
+                });
+
+                mensaje += `%0A-----------------------------------%0A`;
+                mensaje += `%0A *TOTAL APROX: S/ ${totalGeneral.toFixed(2)}*%0A`;
+                mensaje += `(Sujeto a productos por consultar)`;
 
                 window.open(`https://wa.me/${MI_WHATSAPP}?text=${mensaje}`, '_blank');
             };
@@ -166,4 +264,3 @@
     </script>
 </body>
 </html>
-
