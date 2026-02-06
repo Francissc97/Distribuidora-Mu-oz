@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Distribuidora Muñoz | Catálogo Digital</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>Distribuidora Muñoz | Catálogo Mayorista</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<nav>
-        <a href="." title="Volver al inicio">
-            <img src="logo.jpg" alt="Distribuidora Muñoz" class="logo-img">
+
+    <nav>
+        <a href="." title="Recargar página">
+            <img src="logo.jpg" alt="Distribuidora Muñoz" class="logo-img" onerror="this.src='logo.png'">
         </a>
         
         <div class="nav-contact">
-            <a href="https://wa.me/51964604628" class="btn-nav-wsp">
+            <a href="https://wa.me/51964604628" class="btn-nav-wsp" target="_blank">
                 <i class="fa-brands fa-whatsapp"></i> Contacto Directo
             </a>
         </div>
@@ -25,17 +26,17 @@
         <div class="hero-content">
             <h1>Abastece tu negocio con los mejores precios</h1>
             <p>Distribución mayorista de alimentos de primera necesidad.</p>
-            
             <a href="#catalogo" class="btn-cta">VER CATÁLOGO</a>
         </div>
     </header>
+
     <section class="benefits-bar">
         <div class="benefit-item">
-            <i class="fa-solid fa-truck"></i>
+            <i class="fa-solid fa-truck-fast"></i>
             <span>Logística Propia</span>
         </div>
         <div class="benefit-item">
-            <i class="fa-solid fa-money-bill-wave"></i>
+            <i class="fa-solid fa-money-bill-1-wave"></i>
             <span>Precios de Mayorista</span>
         </div>
         <div class="benefit-item">
@@ -45,26 +46,123 @@
     </section>
 
     <section id="catalogo" class="container">
-        <h2 class="section-title">Nuestros Productos</h2>
-        <div id="grid-productos" class="product-grid">
-            <p style="text-align:center; width:100%;">Cargando catálogo...</p>
+        <h2>Nuestros Productos</h2>
+        <div id="grid-productos" class="grid">
+            <p style="text-align:center; width:100%; font-size:1.2rem; color:#666;">
+                <i class="fa-solid fa-spinner fa-spin"></i> Cargando productos...
+            </p>
         </div>
     </section>
 
     <footer>
-        <p>&copy; 2026 Distribuidora Muñoz - Huanuco, Perú</p>
+        <div class="footer-content">
+            <p><strong>Distribuidora Muñoz</strong></p>
+            <p><i class="fa-solid fa-location-dot"></i> Huánuco, Perú</p>
+            <p style="margin-top: 20px; font-size: 0.8rem;">&copy; 2026 Todos los derechos reservados.</p>
+        </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Iniciando catálogo...");
+
+            // --- 1. CONFIGURACIÓN: ¡PON TU NÚMERO AQUÍ! ---
+            const MI_WHATSAPP = "51964604628"; 
+
+            // --- 2. TUS PRODUCTOS ---
+            const productos = [
+                // SACOS
+                { id: 1, nombre: "Azúcar Andahuasi (50kg)", precio: 119.00, cat: "Sacos", img: "azucar-andahuasi.jpg" },
+                { id: 2, nombre: "Harina Doña Angélica (50kg)", precio: 108.00, cat: "Sacos", img: "harina-angelica.jpg" },
+                { id: 3, nombre: "Arroz Costeño (50kg)", precio: null, cat: "Sacos", img: "arroz-costeno.jpg" },
+
+                // ACEITES
+                { id: 4, nombre: "Aceite Miramar (Caja 12unid)", precio: 64.00, cat: "Aceites", img: "aceite-miramar.jpg" },
+                { id: 5, nombre: "Aceite Friemass (Caja 12unid)", precio: 64.00, cat: "Aceites", img: "aceite-friemass.jpg" },
+                { id: 6, nombre: "Aceite Bucanero (Caja 12unid)", precio: 57.00, cat: "Aceites", img: "aceite-bucanero.jpg" },
+
+                // FIDEOS Y OTROS
+                { id: 7, nombre: "Spaghetti Anita (10kg)", precio: 31.00, cat: "Fideos", img: "spaghetti-anita.jpg" },
+                { id: 8, nombre: "Codo Rayado Anita (5kg)", precio: 15.50, cat: "Fideos", img: "codo-anita.jpg" },
+                { id: 9, nombre: "Canuto Rayado Anita (5kg)", precio: 15.50, cat: "Fideos", img: "canuto-anita.jpg" },
+                { id: 10, nombre: "Plumita Anita (5kg)", precio: 15.50, cat: "Fideos", img: "plumita-anita.jpg" },
+                { id: 11, nombre: "Cabello de Ángel (5kg)", precio: 15.50, cat: "Fideos", img: "cabello-angel.jpg" },
+                { id: 12, nombre: "Leche Gloria (Lata)", precio: null, cat: "Lácteos", img: "leche-gloria.jpg" },
+                { id: 13, nombre: "Sal Marina (250g)", precio: null, cat: "Abarrotes", img: "sal-marina.jpg" }
+            ];
+
+            const contenedor = document.getElementById('grid-productos');
+            
+            if(contenedor) {
+                contenedor.innerHTML = ''; // Borra el mensaje de carga
+
+                productos.forEach((p, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.style.animationDelay = `${index * 0.1}s`;
+
+                    // Precio visual
+                    const precioMostrado = p.precio ? `S/ ${p.precio.toFixed(2)}` : "Consultar";
+                    // Precio para cálculos
+                    const precioCalc = p.precio ? p.precio : 0;
+                    const inputId = `cant-${p.id}`;
+
+                    card.innerHTML = `
+                        <div style="position:relative;">
+                            <span class="cat-badge">${p.cat}</span>
+                            <img src="${p.img}" onerror="this.src='https://via.placeholder.com/300x250?text=Sin+Imagen'" alt="${p.nombre}">
+                        </div>
+                        <div class="info">
+                            <h3 class="name">${p.nombre}</h3>
+                            <div class="price" style="${!p.precio ? 'color:#FF6600' : ''}">${precioMostrado}</div>
+                            
+                            <div class="controls">
+                                <label>Cant:</label>
+                                <input type="number" id="${inputId}" value="1" min="1" class="cant-input">
+                            </div>
+
+                            <button class="btn-wsp" onclick="enviarPedido('${p.nombre}', ${precioCalc}, '${inputId}')">
+                                <i class="fa-brands fa-whatsapp"></i> PEDIR
+                            </button>
+                        </div>
+                    `;
+                    contenedor.appendChild(card);
+                });
+            }
+
+            // FUNCIÓN DE ENVÍO A WHATSAPP
+            window.enviarPedido = function(producto, precio, inputId) {
+                const input = document.getElementById(inputId);
+                const cantidad = input ? input.value : 1;
+                
+                let mensaje = "";
+                let totalTexto = "";
+
+                if (precio > 0) {
+                    const total = (precio * cantidad).toFixed(2);
+                    totalTexto = "TOTAL A PAGAR: S/ " + total;
+                    
+                    // Usamos %0A para saltos de línea (Funciona siempre)
+                    mensaje = "Hola Distribuidora Muñoz, deseo hacer un pedido:" + "%0A" +
+                              "-----------------------------------" + "%0A" +
+                              "PRODUCTO: " + producto + "%0A" +
+                              "CANTIDAD: " + cantidad + "%0A" +
+                              "PRECIO UNIT: S/ " + precio.toFixed(2) + "%0A" +
+                              "-----------------------------------" + "%0A" +
+                              "💰 " + totalTexto + "%0A" +
+                              "%0A" +
+                              "Quedo a la espera de confirmación.";
+                } else {
+                    mensaje = "Hola, deseo cotizar:" + "%0A" +
+                              "PRODUCTO: " + producto + "%0A" +
+                              "CANTIDAD: " + cantidad + "%0A" +
+                              "%0A" +
+                              "¿Me podrían dar el precio final?";
+                }
+
+                window.open(`https://wa.me/${MI_WHATSAPP}?text=${mensaje}`, '_blank');
+            };
+        });
+    </script>
 </body>
 </html>
-
-    <script src="script.js"></script>
-</body>
-
-</html>
-
-
-
-
-
