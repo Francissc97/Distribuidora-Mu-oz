@@ -152,3 +152,39 @@ nav {
 header h1 {
     text-shadow: 2px 2px 8px rgba(0,0,0,0.7); /* Sombra negra para leer mejor */
 }
+/* --- ESTILOS PARA EL SELECTOR DE CANTIDAD --- */
+
+.controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px; /* Espacio antes del botón */
+    background: #f9f9f9;
+    padding: 5px;
+    border-radius: 8px;
+}
+
+.controls label {
+    font-weight: bold;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.cant-input {
+    width: 60px; /* Ancho de la cajita */
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #002E5D;
+}
+
+/* Cuando hacen clic en la cajita, que se ponga azul */
+.cant-input:focus {
+    outline: none;
+    border-color: #002E5D;
+    background-color: #eef6ff;
+}
