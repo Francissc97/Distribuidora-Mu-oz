@@ -188,3 +188,35 @@ header h1 {
     border-color: #002E5D;
     background-color: #eef6ff;
 }
+/* --- SECCIÓN DE BENEFICIOS MEJORADA --- */
+.benefits-bar {
+    display: flex; 
+    justify-content: center; /* Centrados horizontalmente */
+    gap: 50px; /* Separación amplia entre cada elemento */
+    background: white; 
+    padding: 30px 20px; /* Más espacio arriba y abajo */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    flex-wrap: wrap; /* Para que se acomoden en celular */
+}
+
+.benefit-item {
+    display: flex;
+    flex-direction: column; /* Icono arriba, texto abajo */
+    align-items: center;
+    text-align: center;
+    font-size: 1.1rem; /* Texto más grande */
+    font-weight: bold;
+    color: #002E5D; /* Azul corporativo */
+}
+
+.benefit-item i {
+    font-size: 2.5rem; /* ICONOS MUCHO MÁS GRANDES */
+    color: #FF6600; /* Color Naranja */
+    margin-bottom: 15px; /* Separación entre icono y texto */
+    transition: transform 0.3s ease;
+}
+
+/* Efecto al pasar el mouse por el icono */
+.benefit-item:hover i {
+    transform: scale(1.2); /* El icono crece un poquito */
+}
