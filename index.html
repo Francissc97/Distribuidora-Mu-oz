@@ -459,7 +459,7 @@
                     const precioTxt = item.precio ? `(S/ ${item.precio.toFixed(2)})` : "(A cotizar)";
                     mensaje += `▪ *${item.cantidad} x* ${item.nombre} ${precioTxt}%0A`;
                 });
-                mensaje += `%0A-----------------------------------%0A *TOTAL APROX: S/ ${total.toFixed(2)}*%0A`;
+                mensaje += `%0A-----------------------------------%0A*TOTAL APROX: S/ ${total.toFixed(2)}*%0A`;
                 window.open(`https://wa.me/${MI_WHATSAPP}?text=${mensaje}`, '_blank');
             };
 
@@ -488,5 +488,6 @@
     </script>
 </body>
 </html>
+
 
 
