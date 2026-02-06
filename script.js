@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
     
-    // 1. CONFIGURACIÓN: ¡PON TU NÚMERO AQUÍ!
+    // --- 1. CONFIGURACIÓN: ¡PON TU NÚMERO AQUÍ! ---
     const MI_WHATSAPP = "51964604628"; 
 
-    // 2. TUS PRODUCTOS
+    // --- 2. TUS PRODUCTOS ---
     const productos = [
         // SACOS
         { id: 1, nombre: "Azúcar Andahuasi (50kg)", precio: 119.00, cat: "Sacos", img: "azucar-andahuasi.jpg" },
@@ -19,18 +19,24 @@ document.addEventListener('DOMContentLoaded', function() {
         { id: 7, nombre: "Spaghetti Anita (10kg)", precio: 31.00, cat: "Fideos", img: "spaghetti-anita.jpg" },
         { id: 8, nombre: "Codo Rayado Anita (5kg)", precio: 15.50, cat: "Fideos", img: "codo-anita.jpg" },
         { id: 9, nombre: "Canuto Rayado Anita (5kg)", precio: 15.50, cat: "Fideos", img: "canuto-anita.jpg" },
-        { id: 10, nombre: "Leche Gloria (Lata)", precio: null, cat: "Lácteos", img: "leche-gloria.jpg" }
+        { id: 10, nombre: "Plumita Anita (5kg)", precio: 15.50, cat: "Fideos", img: "plumita-anita.jpg" },
+        { id: 11, nombre: "Cabello de Ángel (5kg)", precio: 15.50, cat: "Fideos", img: "cabello-angel.jpg" },
+        { id: 12, nombre: "Leche Gloria (Lata)", precio: null, cat: "Lácteos", img: "leche-gloria.jpg" },
+        { id: 13, nombre: "Sal Marina (250g)", precio: null, cat: "Abarrotes", img: "sal-marina.jpg" }
     ];
 
     const contenedor = document.getElementById('grid-productos');
     
+    // VERIFICACIÓN DE SEGURIDAD
     if(contenedor) {
-        contenedor.innerHTML = ''; 
+        contenedor.innerHTML = ''; // Esto BORRA el mensaje de "Cargando..."
 
-        productos.forEach((p) => {
+        productos.forEach((p, index) => {
             const card = document.createElement('div');
             card.className = 'card';
-            
+            // Pequeño retraso para que aparezcan en cascada (animación)
+            card.style.animationDelay = `${index * 0.1}s`;
+
             // Lógica de precio visual
             const precioMostrado = p.precio ? `S/ ${p.precio.toFixed(2)}` : "Consultar";
             // Precio numérico para cálculos (0 si es consultar)
@@ -59,36 +65,9 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
             contenedor.appendChild(card);
         });
+    } else {
+        console.error("ERROR: No se encontró la caja grid-productos en el HTML");
     }
     
-    // --- FUNCIÓN DE ENVÍO MEJORADA ---
-// --- FUNCIÓN DE ENVÍO CORREGIDA ---
-    window.enviarPedido = function(producto, precio, inputId) {
-        // Obtenemos la cantidad
-        const cantidad = document.getElementById(inputId).value;
-        
-        // Calculamos total
-        let totalTexto = "";
-        if (precio > 0) {
-            const total = (precio * cantidad).toFixed(2);
-            totalTexto = "TOTAL A PAGAR: S/ " + total;
-        } else {
-            totalTexto = "Solicito cotización final.";
-        }
-
-        // Construimos el mensaje USANDO %0A para los saltos de línea (Más seguro)
-        // Y usamos texto simple o emojis muy básicos
-        let mensaje = "Hola Distribuidora Muñoz, deseo hacer un pedido:" + "%0A" +
-                      "-----------------------------------" + "%0A" +
-                      "PRODUCTO: " + producto + "%0A" +
-                      "CANTIDAD: " + cantidad + "%0A" +
-                      "PRECIO UNIT: S/ " + precio.toFixed(2) + "%0A" +
-                      "-----------------------------------" + "%0A" +
-                      "💰 " + totalTexto + "%0A" +
-                      "%0A" +
-                      "Quedo a la espera de confirmación.";
-
-        // Abrir WhatsApp
-        const url = `https://wa.me/${MI_WHATSAPP}?text=${mensaje}`;
-        window.open(url, '_blank');
-    };
+    // --- 3. FUNCIÓN DE ENVÍO (CORREGIDA SIN SIGNOS RAROS) ---
+    window.enviarPedido = function
