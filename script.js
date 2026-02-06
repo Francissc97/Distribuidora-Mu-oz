@@ -1,31 +1,25 @@
 document.addEventListener('DOMContentLoaded', function() {
     
-    // --- 1. CONFIGURACIÓN: ¡PON TU NÚMERO AQUÍ! ---
-    // Mantén el 51 adelante (código de Perú)
+    // 1. CONFIGURACIÓN: ¡PON TU NÚMERO AQUÍ!
     const MI_WHATSAPP = "51964604628"; 
 
-    // --- 2. TUS PRODUCTOS ---
+    // 2. TUS PRODUCTOS
     const productos = [
         // SACOS
-        { nombre: "Azúcar Andahuasi (50kg)", precio: 119.00, cat: "Sacos", img: "azucar-andahuasi.jpg" },
-        { nombre: "Harina Doña Angélica (50kg)", precio: 108.00, cat: "Sacos", img: "harina-angelica.jpg" },
-        { nombre: "Arroz Costeño (50kg)", precio: null, cat: "Sacos", img: "arroz-costeno.jpg" },
+        { id: 1, nombre: "Azúcar Andahuasi (50kg)", precio: 119.00, cat: "Sacos", img: "azucar-andahuasi.jpg" },
+        { id: 2, nombre: "Harina Doña Angélica (50kg)", precio: 108.00, cat: "Sacos", img: "harina-angelica.jpg" },
+        { id: 3, nombre: "Arroz Costeño (50kg)", precio: null, cat: "Sacos", img: "arroz-costeno.jpg" },
 
         // ACEITES
-        { nombre: "Aceite Miramar (Caja 12unid)", precio: 64.00, cat: "Aceites", img: "aceite-miramar.jpg" },
-        { nombre: "Aceite Friemass (Caja 12unid)", precio: 64.00, cat: "Aceites", img: "aceite-friemass.jpg" },
-        { nombre: "Aceite Bucanero (Caja 12unid)", precio: 57.00, cat: "Aceites", img: "aceite-bucanero.jpg" },
+        { id: 4, nombre: "Aceite Miramar (Caja 12unid)", precio: 64.00, cat: "Aceites", img: "aceite-miramar.jpg" },
+        { id: 5, nombre: "Aceite Friemass (Caja 12unid)", precio: 64.00, cat: "Aceites", img: "aceite-friemass.jpg" },
+        { id: 6, nombre: "Aceite Bucanero (Caja 12unid)", precio: 57.00, cat: "Aceites", img: "aceite-bucanero.jpg" },
 
-        // FIDEOS ANITA
-        { nombre: "Spaghetti Anita (10kg)", precio: 31.00, cat: "Fideos", img: "spaghetti-anita.jpg" },
-        { nombre: "Codo Rayado Anita (5kg)", precio: 15.50, cat: "Fideos", img: "codo-anita.jpg" },
-        { nombre: "Canuto Rayado Anita (5kg)", precio: 15.50, cat: "Fideos", img: "canuto-anita.jpg" },
-        { nombre: "Plumita Anita (5kg)", precio: 15.50, cat: "Fideos", img: "plumita-anita.jpg" },
-        { nombre: "Cabello de Ángel (5kg)", precio: 15.50, cat: "Fideos", img: "cabello-angel.jpg" },
-        
-        // OTROS
-        { nombre: "Leche Gloria (Lata)", precio: null, cat: "Lácteos", img: "leche-gloria.jpg" },
-        { nombre: "Sal Marina (250g)", precio: null, cat: "Abarrotes", img: "sal-marina.jpg" }
+        // FIDEOS Y OTROS
+        { id: 7, nombre: "Spaghetti Anita (10kg)", precio: 31.00, cat: "Fideos", img: "spaghetti-anita.jpg" },
+        { id: 8, nombre: "Codo Rayado Anita (5kg)", precio: 15.50, cat: "Fideos", img: "codo-anita.jpg" },
+        { id: 9, nombre: "Canuto Rayado Anita (5kg)", precio: 15.50, cat: "Fideos", img: "canuto-anita.jpg" },
+        { id: 10, nombre: "Leche Gloria (Lata)", precio: null, cat: "Lácteos", img: "leche-gloria.jpg" }
     ];
 
     const contenedor = document.getElementById('grid-productos');
@@ -33,15 +27,16 @@ document.addEventListener('DOMContentLoaded', function() {
     if(contenedor) {
         contenedor.innerHTML = ''; 
 
-        productos.forEach((p, index) => {
+        productos.forEach((p) => {
             const card = document.createElement('div');
             card.className = 'card';
-            card.style.animationDelay = `${index * 0.1}s`;
-
-            // Lógica de precio
+            
+            // Lógica de precio visual
             const precioMostrado = p.precio ? `S/ ${p.precio.toFixed(2)}` : "Consultar";
-            // Preparamos el precio para enviarlo a la función (si es null enviamos 0)
-            const precioParaFuncion = p.precio ? p.precio : 0;
+            // Precio numérico para cálculos (0 si es consultar)
+            const precioCalc = p.precio ? p.precio : 0;
+            // ID único para el input de este producto
+            const inputId = `cant-${p.id}`;
 
             card.innerHTML = `
                 <div style="position:relative;">
@@ -52,8 +47,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h3 class="name">${p.nombre}</h3>
                     <div class="price" style="${!p.precio ? 'color:#FF6600' : ''}">${precioMostrado}</div>
                     
-                    <button class="btn-wsp" onclick="enviarPedido('${p.nombre}', ${precioParaFuncion})">
-                        <i class="fa-brands fa-whatsapp"></i> PEDIR AHORA
+                    <div class="controls">
+                        <label>Cant:</label>
+                        <input type="number" id="${inputId}" value="1" min="1" class="cant-input">
+                    </div>
+
+                    <button class="btn-wsp" onclick="enviarPedido('${p.nombre}', ${precioCalc}, '${inputId}')">
+                        <i class="fa-brands fa-whatsapp"></i> PEDIR
                     </button>
                 </div>
             `;
@@ -61,27 +61,32 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // --- 3. FUNCIÓN DE ENVÍO ---
-    // Esta función se activa cuando hacen clic en el botón
-    window.enviarPedido = function(producto, precio) {
+    // --- FUNCIÓN DE ENVÍO MEJORADA ---
+    window.enviarPedido = function(producto, precio, inputId) {
+        // Obtenemos la cantidad que escribió el cliente
+        const cantidad = document.getElementById(inputId).value;
+        
         let mensaje;
         
         if (precio > 0) {
-            // Si el producto tiene precio fijo
+            // Calculamos el total
+            const total = (precio * cantidad).toFixed(2);
             mensaje = `Hola Distribuidora Muñoz, deseo hacer un pedido:
 📦 *Producto:* ${producto}
-💰 *Precio:* S/ ${precio.toFixed(2)}
+🔢 *Cantidad:* ${cantidad}
+💰 *Precio Unit:* S/ ${precio.toFixed(2)}
+💵 *TOTAL A PAGAR:* S/ ${total}
 
-Quedo a la espera de su confirmación.`;
+Quedo a la espera de confirmación.`;
         } else {
-            // Si el producto es "Consultar" (como el arroz)
-            mensaje = `Hola Distribuidora Muñoz, deseo cotizar el precio actual de:
+            // Si es producto de "Consultar"
+            mensaje = `Hola, deseo cotizar el siguiente pedido:
 📦 *Producto:* ${producto}
+🔢 *Cantidad:* ${cantidad}
 
-¿Me podrían indicar el precio por mayor?`;
+¿Me podrían dar el precio final?`;
         }
 
-        // Abre WhatsApp con el mensaje listo
         const url = `https://wa.me/${MI_WHATSAPP}?text=${encodeURIComponent(mensaje)}`;
         window.open(url, '_blank');
     };
