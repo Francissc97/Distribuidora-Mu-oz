@@ -54,7 +54,7 @@
         .btn-add:active { transform: scale(0.95); }
         .btn-add:disabled { background: #ccc; }
 
-        /* NOTIFICACIÓN TOAST (BURBUJA VERDE) */
+        /* NOTIFICACIÓN TOAST */
         #toast {
             visibility: hidden; min-width: 250px; background-color: var(--verde); color: #fff; text-align: center; border-radius: 50px; padding: 16px; position: fixed; z-index: 3000; left: 50%; top: 30px; transform: translateX(-50%); box-shadow: 0 4px 15px rgba(0,0,0,0.2); font-weight: bold; opacity: 0; transition: opacity 0.3s, top 0.3s;
         }
@@ -112,7 +112,7 @@
 
     <nav>
         <a href="."><img src="logo.jpg" alt="Logo" class="logo-img" onerror="this.src='logo.png'"></a>
-        <a href="https://wa.me/51964604628" class="btn-wsp-nav"><i class="fa-brands fa-whatsapp"></i> <span>Atenciòn al Cliente</span></a>
+        <a href="https://wa.me/51964604628" class="btn-wsp-nav"><i class="fa-brands fa-whatsapp"></i> <span>Contacto</span></a>
     </nav>
 
     <header>
@@ -137,35 +137,40 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const MI_WHATSAPP = "51964604628"; // PON TU NÚMERO
+            // --- ACTUALIZACIÓN DE NÚMERO ---
+            const MI_WHATSAPP = "51964604628"; 
             let carrito = [];
 
-            // LISTA ACTUALIZADA (Arito, Corbata, Tornillo, Letras)
             const productos = [
-                // SACOS
+                // --- SACOS ---
                 { id: 1, nombre: "Azúcar Andahuasi (50kg)", precio: 119.00, cat: "Sacos", img: "azucar-andahuasi.jpg", stock: 50 },
                 { id: 2, nombre: "Harina Doña Angélica (50kg)", precio: 108.00, cat: "Sacos", img: "harina-angelica.jpg", stock: 30 },
                 { id: 3, nombre: "Arroz Costeño (50kg)", precio: null, cat: "Sacos", img: "arroz-costeno.jpg", stock: 100 },
-                // ACEITES
+                
+                // --- ACEITES ---
                 { id: 4, nombre: "Aceite Miramar (12 unid)", precio: 64.00, cat: "Aceites", img: "aceite-miramar.jpg", stock: 45 },
                 { id: 5, nombre: "Aceite Friemass (12 unid)", precio: 64.00, cat: "Aceites", img: "aceite-friemass.jpg", stock: 25 },
                 { id: 6, nombre: "Aceite Bucanero (12 unid)", precio: 57.00, cat: "Aceites", img: "aceite-bucanero.jpg", stock: 20 },
-                // FIDEOS ANITA (CORREGIDOS)
+                
+                // --- FIDEOS ANITA (CLÁSICOS) ---
                 { id: 7, nombre: "Spaghetti Anita (10kg)", precio: 31.00, cat: "Fideos", img: "spaghetti-anita.jpg", stock: 50 },
-                { id: 8, nombre: "Codo Rayado Anita (5kg)", precio: 15.50, cat: "Fideos", img: "codo-anita.jpg", stock: 40 },
-                { id: 9, nombre: "Canuto Rayado Anita (5kg)", precio: 15.50, cat: "Fideos", img: "canuto-anita.jpg", stock: 40 },
-                { id: 11, nombre: "Cabello de Ángel Anita (5kg)", precio: 15.50, cat: "Fideos", img: "cabello-angel.jpg", stock: 35 },
-                { id: 12, nombre: "Plumita Anita (5kg)", precio: 15.50, cat: "Fideos", img: "plumita-anita.jpg", stock: 35 },
-                
-                // AQUÍ ESTÁN LOS CAMBIOS: 5KG Y SEPARADOS
-                { id: 13, nombre: "Fideo Arito Anita (5kg)", precio: 15.50, cat: "Fideos", img: "arito-anita.jpg", stock: 20 },
-                { id: 14, nombre: "Fideo Corbata Anita (5kg)", precio: 15.50, cat: "Fideos", img: "corbata-anita.jpg", stock: 20 },
-                
-                // SOPAS SEPARADAS
-                { id: 15, nombre: "Fideo Tornillo Anita (5kg)", precio: 15.50, cat: "Fideos", img: "tornillo-anita.jpg", stock: 20 },
-                { id: 17, nombre: "Fideo Letras Anita (5kg)", precio: 15.50, cat: "Fideos", img: "letras-anita.jpg", stock: 20 },
+                { id: 8, nombre: "Codo Rayado Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "codo-anita.jpg", stock: 40 },
+                { id: 9, nombre: "Canuto Rayado Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "canuto-anita.jpg", stock: 40 },
+                { id: 11, nombre: "Cabello de Ángel Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "cabello-angel.jpg", stock: 35 },
+                { id: 12, nombre: "Plumita Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "plumita-anita.jpg", stock: 35 },
+                { id: 13, nombre: "Fideo Arito Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "arito-anita.jpg", stock: 20 },
+                { id: 14, nombre: "Fideo Corbata Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "corbata-anita.jpg", stock: 20 },
+                { id: 15, nombre: "Fideo Tornillo Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "tornillo-anita.jpg", stock: 20 },
+                { id: 17, nombre: "Fideo Letras Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "letras-anita.jpg", stock: 20 },
 
-                // OTROS
+                // --- NUEVOS FIDEOS (LISTA AZUL) ---
+                { id: 18, nombre: "Mini Codo Rayado Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "minicodo-anita.jpg", stock: 20 },
+                { id: 19, nombre: "Macarrón Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "macarron-anita.jpg", stock: 20 },
+                { id: 20, nombre: "Caracol Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "caracol-anita.jpg", stock: 20 },
+                { id: 21, nombre: "Munición Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "municion-anita.jpg", stock: 20 },
+                { id: 22, nombre: "Tallarín Grueso Anita (Pack 10kg)", precio: 31.00, cat: "Fideos", img: "tallarin-grueso.jpg", stock: 20 },
+
+                // --- OTROS ---
                 { id: 10, nombre: "Leche Gloria (Lata)", precio: null, cat: "Abarrotes", img: "leche-gloria.jpg", stock: 200 },
                 { id: 16, nombre: "Sal Marina (Bolsa)", precio: null, cat: "Abarrotes", img: "sal-marina.jpg", stock: 100 }
             ];
@@ -222,8 +227,6 @@
                 
                 updateUI();
                 document.getElementById(`in-${id}`).value = 1;
-                
-                // FUNCIÓN DE NOTIFICACIÓN VERDE (NO ALERTA)
                 mostrarNotificacion(); 
             };
 
@@ -287,4 +290,3 @@
     </script>
 </body>
 </html>
-
