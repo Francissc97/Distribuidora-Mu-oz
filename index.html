@@ -56,16 +56,26 @@
         .qty-btn { width: 30px; height: 30px; background: white; border: 1px solid #ddd; border-radius: 50%; font-weight: bold; color: var(--azul); cursor: pointer; }
         .qty-input { width: 40px; text-align: center; background: transparent; border: none; font-weight: bold; color: var(--azul); }
 
-        .btn-add { background: var(--azul); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .btn-add { background: var(--azul); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; transition: 0.2s; }
+        .btn-add:active { transform: scale(0.98); } /* Efecto de clic */
         .btn-add:disabled { background: #ccc; }
 
+        /* NOTIFICACIÓN TOAST (NUEVO) */
+        #toast {
+            visibility: hidden; min-width: 250px; background-color: var(--verde); color: #fff; text-align: center; border-radius: 50px; padding: 16px; position: fixed; z-index: 3000; left: 50%; top: 30px; transform: translateX(-50%); box-shadow: 0 4px 15px rgba(0,0,0,0.2); font-weight: bold; opacity: 0; transition: opacity 0.3s, top 0.3s;
+        }
+        #toast.show { visibility: visible; opacity: 1; top: 50px; }
+
         /* CARRITO FLOTANTE */
-        .cart-float { position: fixed; bottom: 20px; right: 20px; background: var(--naranja); color: white; padding: 12px 20px; border-radius: 50px; display: flex; align-items: center; gap: 10px; font-weight: bold; box-shadow: 0 5px 20px rgba(255,102,0,0.4); cursor: pointer; z-index: 900; }
+        .cart-float { position: fixed; bottom: 20px; right: 20px; background: var(--naranja); color: white; padding: 12px 20px; border-radius: 50px; display: flex; align-items: center; gap: 10px; font-weight: bold; box-shadow: 0 5px 20px rgba(255,102,0,0.4); cursor: pointer; z-index: 900; transition: transform 0.2s; }
+        .cart-float:hover { transform: scale(1.05); }
         
         /* MODAL */
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; display: none; justify-content: center; align-items: center; }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(2px); }
         .modal.open { display: flex; }
-        .modal-box { background: white; width: 90%; max-width: 450px; max-height: 90vh; border-radius: 20px; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .modal-box { background: white; width: 90%; max-width: 450px; max-height: 90vh; border-radius: 20px; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: popIn 0.3s; }
+        @keyframes popIn { from{transform:scale(0.9);opacity:0} to{transform:scale(1);opacity:1} }
+        
         .modal-header { padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
         .modal-body { padding: 20px; overflow-y: auto; }
         .modal-footer { padding: 20px; border-top: 1px solid #eee; background: #fafafa; border-radius: 0 0 20px 20px; }
@@ -84,11 +94,13 @@
 </head>
 <body>
 
+    <div id="toast"><i class="fa-solid fa-circle-check"></i> Agregado al carrito</div>
+
     <div id="cart-modal" class="modal">
         <div class="modal-box">
             <div class="modal-header">
                 <h3>Tu Pedido</h3>
-                <button onclick="cerrarCarrito()" style="border:none; background:none; font-size:1.5rem;">&times;</button>
+                <button onclick="cerrarCarrito()" style="border:none; background:none; font-size:1.5rem; cursor:pointer;">&times;</button>
             </div>
             <div class="modal-body" id="cart-items"></div>
             <div class="modal-footer">
@@ -106,7 +118,7 @@
     </div>
 
     <nav>
-        <a href="."><img src="logo.jpg" alt="Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/150x50?text=LOGO'"></a>
+        <a href="."><img src="logo.jpg" alt="Logo" class="logo-img" onerror="this.src='logo.png'"></a>
         <a href="https://wa.me/51964604628" class="btn-wsp-nav"><i class="fa-brands fa-whatsapp"></i> <span>Contacto</span></a>
     </nav>
 
@@ -132,22 +144,20 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const MI_WHATSAPP = "51999999999"; // PON TU NÚMERO
+            const MI_WHATSAPP = "51964604628"; // PON TU NÚMERO
             let carrito = [];
 
-            // --- LISTA COMPLETA DE PRODUCTOS (Basado en tus imágenes) ---
+            // LISTA COMPLETA
             const productos = [
                 // SACOS
                 { id: 1, nombre: "Azúcar Andahuasi (50kg)", precio: 119.00, cat: "Sacos", img: "azucar-andahuasi.jpg", stock: 50 },
                 { id: 2, nombre: "Harina Doña Angélica (50kg)", precio: 108.00, cat: "Sacos", img: "harina-angelica.jpg", stock: 30 },
                 { id: 3, nombre: "Arroz Costeño (50kg)", precio: null, cat: "Sacos", img: "arroz-costeno.jpg", stock: 100 },
-                
                 // ACEITES
                 { id: 4, nombre: "Aceite Miramar (12 unid)", precio: 64.00, cat: "Aceites", img: "aceite-miramar.jpg", stock: 45 },
                 { id: 5, nombre: "Aceite Friemass (12 unid)", precio: 64.00, cat: "Aceites", img: "aceite-friemass.jpg", stock: 25 },
                 { id: 6, nombre: "Aceite Bucanero (12 unid)", precio: 57.00, cat: "Aceites", img: "aceite-bucanero.jpg", stock: 20 },
-
-                // FIDEOS ANITA (Nuevos agregados)
+                // FIDEOS ANITA
                 { id: 7, nombre: "Spaghetti Anita (10kg)", precio: 31.00, cat: "Fideos", img: "spaghetti-anita.jpg", stock: 50 },
                 { id: 8, nombre: "Codo Rayado Anita (5kg)", precio: 15.50, cat: "Fideos", img: "codo-anita.jpg", stock: 40 },
                 { id: 9, nombre: "Canuto Rayado Anita (5kg)", precio: 15.50, cat: "Fideos", img: "canuto-anita.jpg", stock: 40 },
@@ -156,13 +166,11 @@
                 { id: 13, nombre: "Fideo Arito Anita (Pack 12u)", precio: 15.50, cat: "Fideos", img: "arito-anita.jpg", stock: 20 },
                 { id: 14, nombre: "Fideo Corbata Anita (Pack)", precio: 15.50, cat: "Fideos", img: "corbata-anita.jpg", stock: 20 },
                 { id: 15, nombre: "Sopas Varias (Tornillo/Letras)", precio: 15.50, cat: "Fideos", img: "sopas-anita.jpg", stock: 20 },
-
                 // OTROS
                 { id: 10, nombre: "Leche Gloria (Lata)", precio: null, cat: "Abarrotes", img: "leche-gloria.jpg", stock: 200 },
                 { id: 16, nombre: "Sal Marina (Bolsa)", precio: null, cat: "Abarrotes", img: "sal-marina.jpg", stock: 100 }
             ];
 
-            // RENDERIZAR
             const grid = document.getElementById('grid');
             function render(lista) {
                 grid.innerHTML = '';
@@ -196,7 +204,6 @@
             }
             render(productos);
 
-            // LOGICA CARRITO
             window.updInput = (id, v) => {
                 const el = document.getElementById(`in-${id}`);
                 let val = parseInt(el.value) + v;
@@ -209,21 +216,28 @@
                 const q = parseInt(document.getElementById(`in-${id}`).value);
                 const exist = carrito.find(x => x.id === id);
                 
-                if((exist ? exist.q : 0) + q > p.stock) return alert("Stock insuficiente");
+                if((exist ? exist.q : 0) + q > p.stock) return alert("Stock insuficiente"); // Esta alerta sí es útil, pero la de éxito la quitamos
                 
                 if(exist) exist.q += q;
                 else carrito.push({ ...p, q });
                 
                 updateUI();
                 document.getElementById(`in-${id}`).value = 1;
-                alert("Agregado al carrito");
+                
+                // --- AQUÍ ESTÁ LA MAGIA ---
+                mostrarNotificacion(); // En vez de alert(), llamamos a esta función
             };
+
+            function mostrarNotificacion() {
+                const x = document.getElementById("toast");
+                x.className = "show";
+                setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+            }
 
             function updateUI() {
                 document.getElementById('cart-count').innerText = carrito.reduce((a,b)=>a+b.q,0);
             }
 
-            // MODAL
             window.abrirCarrito = () => {
                 const box = document.getElementById('cart-items');
                 const tot = document.getElementById('cart-total');
@@ -241,7 +255,7 @@
                                 <div style="font-weight:bold; color:var(--azul)">${item.nombre}</div>
                                 <div style="font-size:0.9rem">Cant: ${item.q} | Sub: S/ ${((item.precio||0)*item.q).toFixed(2)}</div>
                             </div>
-                            <button onclick="delItem(${i})" style="margin-left:auto; color:red; border:none; background:none"><i class="fa-solid fa-trash"></i></button>
+                            <button onclick="delItem(${i})" style="margin-left:auto; color:red; border:none; background:none; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     `;
                 });
@@ -264,7 +278,6 @@
                 window.open(`https://wa.me/${MI_WHATSAPP}?text=${msg}`);
             };
 
-            // FILTROS Y BUSCADOR
             document.getElementById('search').addEventListener('input', (e) => {
                 render(productos.filter(p => p.nombre.toLowerCase().includes(e.target.value.toLowerCase())));
             });
@@ -277,4 +290,3 @@
     </script>
 </body>
 </html>
-
