@@ -64,7 +64,7 @@
         .cart-float { position: fixed; bottom: 20px; right: 20px; background: var(--naranja); color: white; padding: 12px 20px; border-radius: 50px; display: flex; align-items: center; gap: 10px; font-weight: bold; box-shadow: 0 5px 20px rgba(255,102,0,0.4); cursor: pointer; z-index: 900; transition: transform 0.2s; }
         .cart-float:hover { transform: scale(1.05); }
 
-        /* MODAL */
+        /* MODAL CARRITO */
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(2px); }
         .modal.open { display: flex; }
         .modal-box { background: white; width: 90%; max-width: 450px; max-height: 90vh; border-radius: 20px; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: popIn 0.3s; }
@@ -77,6 +77,35 @@
         .cart-item img { width: 50px; height: 50px; object-fit: contain; }
         .btn-checkout { background: var(--verde); color: white; width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: bold; display: flex; justify-content: center; gap: 10px; font-size: 1.1rem; cursor: pointer; }
 
+        /* --- NUEVO: MODAL DE PROMOCIÓN (POP-UP) --- */
+        .modal-promo {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 5000;
+            display: none; /* Se activa con JS */
+            justify-content: center; align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        .promo-content {
+            position: relative; width: 90%; max-width: 500px;
+            background: transparent; border-radius: 15px;
+            text-align: center;
+            animation: zoomIn 0.5s ease;
+        }
+        @keyframes zoomIn { from {transform: scale(0.5); opacity:0;} to {transform: scale(1); opacity:1;} }
+        
+        .promo-img {
+            width: 100%; height: auto; border-radius: 15px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5); border: 2px solid white;
+        }
+        .close-promo {
+            position: absolute; top: -15px; right: -15px;
+            background: red; color: white; border: 2px solid white;
+            width: 35px; height: 35px; border-radius: 50%;
+            font-size: 1.2rem; font-weight: bold; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            display: flex; align-items: center; justify-content: center;
+        }
+
         /* Responsive PC */
         @media(min-width: 992px) {
             .grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px; }
@@ -86,6 +115,13 @@
     </style>
 </head>
 <body>
+
+    <div id="promoModal" class="modal-promo">
+        <div class="promo-content">
+            <button class="close-promo" onclick="cerrarPromo()">&times;</button>
+            <img src="promo.jpg" alt="Oferta Especial" class="promo-img" onerror="this.style.display='none'">
+        </div>
+    </div>
 
     <div id="toast"><i class="fa-solid fa-check-circle"></i> Agregado al carrito</div>
 
@@ -137,22 +173,35 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- ACTUALIZACIÓN DE NÚMERO ---
-            const MI_WHATSAPP = "51964604628"; 
+            const MI_WHATSAPP = "51964604628";
             let carrito = [];
 
+            // --- LÓGICA DE LA PROMOCIÓN (POP-UP) ---
+            // Se abre 1 segundo después de cargar la página para dar un efecto suave
+            setTimeout(() => {
+                document.getElementById('promoModal').style.display = 'flex';
+            }, 1000);
+
+            window.cerrarPromo = () => {
+                document.getElementById('promoModal').style.display = 'none';
+            };
+
+            // Cerrar si hacen clic fuera de la imagen
+            document.getElementById('promoModal').addEventListener('click', (e) => {
+                if(e.target.id === 'promoModal') cerrarPromo();
+            });
+
+            // --- CATÁLOGO ---
             const productos = [
-                // --- SACOS ---
+                // SACOS
                 { id: 1, nombre: "Azúcar Andahuasi (50kg)", precio: 119.00, cat: "Sacos", img: "azucar-andahuasi.jpg", stock: 50 },
                 { id: 2, nombre: "Harina Doña Angélica (50kg)", precio: 108.00, cat: "Sacos", img: "harina-angelica.jpg", stock: 30 },
                 { id: 3, nombre: "Arroz Costeño (50kg)", precio: null, cat: "Sacos", img: "arroz-costeno.jpg", stock: 100 },
-                
-                // --- ACEITES ---
+                // ACEITES
                 { id: 4, nombre: "Aceite Miramar (12 unid)", precio: 64.00, cat: "Aceites", img: "aceite-miramar.jpg", stock: 45 },
                 { id: 5, nombre: "Aceite Friemass (12 unid)", precio: 64.00, cat: "Aceites", img: "aceite-friemass.jpg", stock: 25 },
                 { id: 6, nombre: "Aceite Bucanero (12 unid)", precio: 57.00, cat: "Aceites", img: "aceite-bucanero.jpg", stock: 20 },
-                
-                // --- FIDEOS ANITA (CLÁSICOS) ---
+                // FIDEOS ANITA
                 { id: 7, nombre: "Spaghetti Anita (10kg)", precio: 31.00, cat: "Fideos", img: "spaghetti-anita.jpg", stock: 50 },
                 { id: 8, nombre: "Codo Rayado Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "codo-anita.jpg", stock: 40 },
                 { id: 9, nombre: "Canuto Rayado Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "canuto-anita.jpg", stock: 40 },
@@ -162,15 +211,13 @@
                 { id: 14, nombre: "Fideo Corbata Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "corbata-anita.jpg", stock: 20 },
                 { id: 15, nombre: "Fideo Tornillo Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "tornillo-anita.jpg", stock: 20 },
                 { id: 17, nombre: "Fideo Letras Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "letras-anita.jpg", stock: 20 },
-
-                // --- NUEVOS FIDEOS (LISTA AZUL) ---
+                // NUEVOS AZULES
                 { id: 18, nombre: "Mini Codo Rayado Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "minicodo-anita.jpg", stock: 20 },
                 { id: 19, nombre: "Macarrón Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "macarron-anita.jpg", stock: 20 },
                 { id: 20, nombre: "Caracol Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "caracol-anita.jpg", stock: 20 },
                 { id: 21, nombre: "Munición Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "municion-anita.jpg", stock: 20 },
                 { id: 22, nombre: "Tallarín Grueso Anita (Pack 10kg)", precio: 31.00, cat: "Fideos", img: "tallarin-grueso.jpg", stock: 20 },
-
-                // --- OTROS ---
+                // OTROS
                 { id: 10, nombre: "Leche Gloria (Lata)", precio: null, cat: "Abarrotes", img: "leche-gloria.jpg", stock: 200 },
                 { id: 16, nombre: "Sal Marina (Bolsa)", precio: null, cat: "Abarrotes", img: "sal-marina.jpg", stock: 100 }
             ];
