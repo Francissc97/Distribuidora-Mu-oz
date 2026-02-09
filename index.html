@@ -7,13 +7,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* =========================================
-           ESTILOS GENERALES
-           ========================================= */
+        /* ESTILOS GENERALES */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: #f4f7f6; color: #333; padding-bottom: 80px; }
         input, button { font-size: 16px; outline: none; }
-
         :root { --azul: #002E5D; --naranja: #FF6600; --verde: #25D366; --gris: #f8f9fa; }
 
         /* HEADER Y NAV */
@@ -29,7 +26,6 @@
         /* BUSCADOR Y FILTROS */
         .search-box { margin: -30px auto 20px; width: 90%; max-width: 600px; position: relative; z-index: 10; }
         .search-input { width: 100%; padding: 15px 25px; border-radius: 50px; border: 2px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        
         .filters { display: flex; gap: 10px; overflow-x: auto; padding: 0 20px 15px; scrollbar-width: none; justify-content: start; }
         .filters::-webkit-scrollbar { display: none; }
         .filter-btn { background: white; border: 1px solid #ddd; padding: 8px 20px; border-radius: 20px; white-space: nowrap; cursor: pointer; color: #666; font-weight: 600; }
@@ -38,10 +34,8 @@
         /* GRID PRODUCTOS */
         .container { max-width: 1100px; margin: 0 auto; padding: 0 15px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
-        
         .card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: flex; flex-direction: column; height: 100%; transition: transform 0.2s; }
         .card:hover { transform: translateY(-5px); }
-        
         .card-img { height: 160px; padding: 15px; text-align: center; position: relative; border-bottom: 1px solid #eee; }
         .card-img img { height: 100%; width: auto; max-width: 100%; object-fit: contain; }
         .badge { position: absolute; top: 10px; left: 10px; background: var(--azul); color: white; padding: 4px 8px; border-radius: 8px; font-size: 0.7rem; font-weight: bold; }
@@ -57,10 +51,10 @@
         .qty-input { width: 40px; text-align: center; background: transparent; border: none; font-weight: bold; color: var(--azul); }
 
         .btn-add { background: var(--azul); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; transition: 0.2s; }
-        .btn-add:active { transform: scale(0.98); } /* Efecto de clic */
+        .btn-add:active { transform: scale(0.95); }
         .btn-add:disabled { background: #ccc; }
 
-        /* NOTIFICACIÓN TOAST (NUEVO) */
+        /* NOTIFICACIÓN TOAST (BURBUJA VERDE) */
         #toast {
             visibility: hidden; min-width: 250px; background-color: var(--verde); color: #fff; text-align: center; border-radius: 50px; padding: 16px; position: fixed; z-index: 3000; left: 50%; top: 30px; transform: translateX(-50%); box-shadow: 0 4px 15px rgba(0,0,0,0.2); font-weight: bold; opacity: 0; transition: opacity 0.3s, top 0.3s;
         }
@@ -69,7 +63,7 @@
         /* CARRITO FLOTANTE */
         .cart-float { position: fixed; bottom: 20px; right: 20px; background: var(--naranja); color: white; padding: 12px 20px; border-radius: 50px; display: flex; align-items: center; gap: 10px; font-weight: bold; box-shadow: 0 5px 20px rgba(255,102,0,0.4); cursor: pointer; z-index: 900; transition: transform 0.2s; }
         .cart-float:hover { transform: scale(1.05); }
-        
+
         /* MODAL */
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(2px); }
         .modal.open { display: flex; }
@@ -79,7 +73,6 @@
         .modal-header { padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
         .modal-body { padding: 20px; overflow-y: auto; }
         .modal-footer { padding: 20px; border-top: 1px solid #eee; background: #fafafa; border-radius: 0 0 20px 20px; }
-        
         .cart-item { display: flex; gap: 15px; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
         .cart-item img { width: 50px; height: 50px; object-fit: contain; }
         .btn-checkout { background: var(--verde); color: white; width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: bold; display: flex; justify-content: center; gap: 10px; font-size: 1.1rem; cursor: pointer; }
@@ -94,7 +87,7 @@
 </head>
 <body>
 
-    <div id="toast"><i class="fa-solid fa-circle-check"></i> Agregado al carrito</div>
+    <div id="toast"><i class="fa-solid fa-check-circle"></i> Agregado al carrito</div>
 
     <div id="cart-modal" class="modal">
         <div class="modal-box">
@@ -119,7 +112,7 @@
 
     <nav>
         <a href="."><img src="logo.jpg" alt="Logo" class="logo-img" onerror="this.src='logo.png'"></a>
-        <a href="https://wa.me/51964604628" class="btn-wsp-nav"><i class="fa-brands fa-whatsapp"></i> <span>Contacto</span></a>
+        <a href="https://wa.me/51999999999" class="btn-wsp-nav"><i class="fa-brands fa-whatsapp"></i> <span>Contacto</span></a>
     </nav>
 
     <header>
@@ -144,10 +137,10 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const MI_WHATSAPP = "51964604628"; // PON TU NÚMERO
+            const MI_WHATSAPP = "51999999999"; // PON TU NÚMERO
             let carrito = [];
 
-            // LISTA COMPLETA
+            // LISTA ACTUALIZADA (Arito, Corbata, Tornillo, Letras)
             const productos = [
                 // SACOS
                 { id: 1, nombre: "Azúcar Andahuasi (50kg)", precio: 119.00, cat: "Sacos", img: "azucar-andahuasi.jpg", stock: 50 },
@@ -157,15 +150,21 @@
                 { id: 4, nombre: "Aceite Miramar (12 unid)", precio: 64.00, cat: "Aceites", img: "aceite-miramar.jpg", stock: 45 },
                 { id: 5, nombre: "Aceite Friemass (12 unid)", precio: 64.00, cat: "Aceites", img: "aceite-friemass.jpg", stock: 25 },
                 { id: 6, nombre: "Aceite Bucanero (12 unid)", precio: 57.00, cat: "Aceites", img: "aceite-bucanero.jpg", stock: 20 },
-                // FIDEOS ANITA
+                // FIDEOS ANITA (CORREGIDOS)
                 { id: 7, nombre: "Spaghetti Anita (10kg)", precio: 31.00, cat: "Fideos", img: "spaghetti-anita.jpg", stock: 50 },
                 { id: 8, nombre: "Codo Rayado Anita (5kg)", precio: 15.50, cat: "Fideos", img: "codo-anita.jpg", stock: 40 },
                 { id: 9, nombre: "Canuto Rayado Anita (5kg)", precio: 15.50, cat: "Fideos", img: "canuto-anita.jpg", stock: 40 },
                 { id: 11, nombre: "Cabello de Ángel Anita (5kg)", precio: 15.50, cat: "Fideos", img: "cabello-angel.jpg", stock: 35 },
                 { id: 12, nombre: "Plumita Anita (5kg)", precio: 15.50, cat: "Fideos", img: "plumita-anita.jpg", stock: 35 },
-                { id: 13, nombre: "Fideo Arito Anita (Pack 12u)", precio: 15.50, cat: "Fideos", img: "arito-anita.jpg", stock: 20 },
-                { id: 14, nombre: "Fideo Corbata Anita (Pack)", precio: 15.50, cat: "Fideos", img: "corbata-anita.jpg", stock: 20 },
-                { id: 15, nombre: "Sopas Varias (Tornillo/Letras)", precio: 15.50, cat: "Fideos", img: "sopas-anita.jpg", stock: 20 },
+                
+                // AQUÍ ESTÁN LOS CAMBIOS: 5KG Y SEPARADOS
+                { id: 13, nombre: "Fideo Arito Anita (5kg)", precio: 15.50, cat: "Fideos", img: "arito-anita.jpg", stock: 20 },
+                { id: 14, nombre: "Fideo Corbata Anita (5kg)", precio: 15.50, cat: "Fideos", img: "corbata-anita.jpg", stock: 20 },
+                
+                // SOPAS SEPARADAS
+                { id: 15, nombre: "Fideo Tornillo Anita (5kg)", precio: 15.50, cat: "Fideos", img: "tornillo-anita.jpg", stock: 20 },
+                { id: 17, nombre: "Fideo Letras Anita (5kg)", precio: 15.50, cat: "Fideos", img: "letras-anita.jpg", stock: 20 },
+
                 // OTROS
                 { id: 10, nombre: "Leche Gloria (Lata)", precio: null, cat: "Abarrotes", img: "leche-gloria.jpg", stock: 200 },
                 { id: 16, nombre: "Sal Marina (Bolsa)", precio: null, cat: "Abarrotes", img: "sal-marina.jpg", stock: 100 }
@@ -216,7 +215,7 @@
                 const q = parseInt(document.getElementById(`in-${id}`).value);
                 const exist = carrito.find(x => x.id === id);
                 
-                if((exist ? exist.q : 0) + q > p.stock) return alert("Stock insuficiente"); // Esta alerta sí es útil, pero la de éxito la quitamos
+                if((exist ? exist.q : 0) + q > p.stock) return alert("Stock insuficiente");
                 
                 if(exist) exist.q += q;
                 else carrito.push({ ...p, q });
@@ -224,8 +223,8 @@
                 updateUI();
                 document.getElementById(`in-${id}`).value = 1;
                 
-                // --- AQUÍ ESTÁ LA MAGIA ---
-                mostrarNotificacion(); // En vez de alert(), llamamos a esta función
+                // FUNCIÓN DE NOTIFICACIÓN VERDE (NO ALERTA)
+                mostrarNotificacion(); 
             };
 
             function mostrarNotificacion() {
@@ -243,9 +242,7 @@
                 const tot = document.getElementById('cart-total');
                 box.innerHTML = '';
                 let t = 0;
-
                 if(carrito.length===0) box.innerHTML = "<p style='text-align:center; color:#999'>Carrito vacío</p>";
-
                 carrito.forEach((item, i) => {
                     t += (item.precio||0) * item.q;
                     box.innerHTML += `
