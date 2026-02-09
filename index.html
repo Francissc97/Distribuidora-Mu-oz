@@ -7,11 +7,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* ESTILOS GENERALES */
+        /* =========================================
+           ESTILOS GENERALES Y ANIMACIONES
+           ========================================= */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: #f4f7f6; color: #333; padding-bottom: 80px; }
+        body { background-color: #f4f7f6; color: #333; padding-bottom: 90px; }
         input, button { font-size: 16px; outline: none; }
         :root { --azul: #002E5D; --naranja: #FF6600; --verde: #25D366; --gris: #f8f9fa; }
+
+        /* Animaciones de Movimiento */
+        @keyframes flotar { 0% { transform: translateY(0px); } 50% { transform: translateY(-5px); } 100% { transform: translateY(0px); } }
+        @keyframes pulsar { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 102, 0, 0.7); } 70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 102, 0, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 102, 0, 0); } }
+        @keyframes entradaSuave { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes precioBajada { 0% { color: var(--naranja); transform: scale(1); } 50% { color: var(--verde); transform: scale(1.2); } 100% { color: var(--verde); transform: scale(1); } }
 
         /* HEADER Y NAV */
         nav { background: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
@@ -21,21 +29,30 @@
         header { 
             background: linear-gradient(rgba(0,46,93,0.9), rgba(0,46,93,0.8)), url('https://source.unsplash.com/1600x900/?warehouse');
             background-size: cover; color: white; text-align: center; padding: 50px 20px 80px 20px;
+            animation: entradaSuave 0.8s ease-out;
         }
 
         /* BUSCADOR Y FILTROS */
-        .search-box { margin: -30px auto 20px; width: 90%; max-width: 600px; position: relative; z-index: 10; }
-        .search-input { width: 100%; padding: 15px 25px; border-radius: 50px; border: 2px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .filters { display: flex; gap: 10px; overflow-x: auto; padding: 0 20px 15px; scrollbar-width: none; justify-content: start; }
+        .search-box { margin: -30px auto 20px; width: 90%; max-width: 600px; position: relative; z-index: 10; animation: entradaSuave 1s ease-out; }
+        .search-input { width: 100%; padding: 15px 25px; border-radius: 50px; border: 2px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: 0.3s; }
+        .search-input:focus { transform: scale(1.02); border-color: var(--naranja); }
+
+        .filters { display: flex; gap: 10px; overflow-x: auto; padding: 0 20px 15px; scrollbar-width: none; justify-content: start; animation: entradaSuave 1.2s ease-out; }
         .filters::-webkit-scrollbar { display: none; }
-        .filter-btn { background: white; border: 1px solid #ddd; padding: 8px 20px; border-radius: 20px; white-space: nowrap; cursor: pointer; color: #666; font-weight: 600; }
-        .filter-btn.active { background: var(--azul); color: white; border-color: var(--azul); }
+        .filter-btn { background: white; border: 1px solid #ddd; padding: 8px 20px; border-radius: 20px; white-space: nowrap; cursor: pointer; color: #666; font-weight: 600; transition: 0.3s; }
+        .filter-btn.active { background: var(--azul); color: white; border-color: var(--azul); transform: scale(1.05); }
 
         /* GRID PRODUCTOS */
         .container { max-width: 1100px; margin: 0 auto; padding: 0 15px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
-        .card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: flex; flex-direction: column; height: 100%; transition: transform 0.2s; }
-        .card:hover { transform: translateY(-5px); }
+        .card { 
+            background: white; border-radius: 15px; overflow: hidden; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: flex; flex-direction: column; height: 100%; 
+            transition: all 0.3s; 
+            animation: entradaSuave 0.5s backwards; /* Aparecen en cascada con JS */
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        
         .card-img { height: 160px; padding: 15px; text-align: center; position: relative; border-bottom: 1px solid #eee; }
         .card-img img { height: 100%; width: auto; max-width: 100%; object-fit: contain; }
         .badge { position: absolute; top: 10px; left: 10px; background: var(--azul); color: white; padding: 4px 8px; border-radius: 8px; font-size: 0.7rem; font-weight: bold; }
@@ -44,10 +61,11 @@
         .stock { font-size: 0.75rem; color: var(--verde); font-weight: bold; margin-bottom: 5px; }
         .stock.low { color: #dc3545; }
         .name { font-size: 0.95rem; font-weight: 700; color: var(--azul); margin-bottom: 5px; line-height: 1.3; flex-grow: 1; }
-        .price { font-size: 1.2rem; color: var(--naranja); font-weight: 800; margin-bottom: 10px; }
+        .price { font-size: 1.2rem; color: var(--naranja); font-weight: 800; margin-bottom: 10px; transition: color 0.3s; }
 
         .controls { display: flex; align-items: center; justify-content: space-between; background: var(--gris); border-radius: 8px; padding: 4px; margin-bottom: 10px; }
-        .qty-btn { width: 30px; height: 30px; background: white; border: 1px solid #ddd; border-radius: 50%; font-weight: bold; color: var(--azul); cursor: pointer; }
+        .qty-btn { width: 30px; height: 30px; background: white; border: 1px solid #ddd; border-radius: 50%; font-weight: bold; color: var(--azul); cursor: pointer; transition: 0.2s; }
+        .qty-btn:active { transform: scale(0.9); background: #eee; }
         .qty-input { width: 40px; text-align: center; background: transparent; border: none; font-weight: bold; color: var(--azul); }
 
         .btn-add { background: var(--azul); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; transition: 0.2s; }
@@ -56,55 +74,47 @@
 
         /* NOTIFICACIÓN TOAST */
         #toast {
-            visibility: hidden; min-width: 250px; background-color: var(--verde); color: #fff; text-align: center; border-radius: 50px; padding: 16px; position: fixed; z-index: 3000; left: 50%; top: 30px; transform: translateX(-50%); box-shadow: 0 4px 15px rgba(0,0,0,0.2); font-weight: bold; opacity: 0; transition: opacity 0.3s, top 0.3s;
+            visibility: hidden; min-width: 250px; background-color: var(--verde); color: #fff; text-align: center; border-radius: 50px; padding: 16px; position: fixed; z-index: 3000; left: 50%; top: 30px; transform: translateX(-50%); box-shadow: 0 4px 15px rgba(0,0,0,0.2); font-weight: bold; opacity: 0; transition: all 0.5s;
         }
-        #toast.show { visibility: visible; opacity: 1; top: 50px; }
+        #toast.show { visibility: visible; opacity: 1; top: 60px; }
 
-        /* CARRITO FLOTANTE */
-        .cart-float { position: fixed; bottom: 20px; right: 20px; background: var(--naranja); color: white; padding: 12px 20px; border-radius: 50px; display: flex; align-items: center; gap: 10px; font-weight: bold; box-shadow: 0 5px 20px rgba(255,102,0,0.4); cursor: pointer; z-index: 900; transition: transform 0.2s; }
-        .cart-float:hover { transform: scale(1.05); }
+        /* CARRITO FLOTANTE (Con animación de latido) */
+        .cart-float { 
+            position: fixed; bottom: 20px; right: 20px; background: var(--naranja); color: white; 
+            padding: 12px 25px; border-radius: 50px; display: flex; align-items: center; gap: 10px; 
+            font-weight: bold; box-shadow: 0 5px 20px rgba(255,102,0,0.5); cursor: pointer; z-index: 900; 
+            animation: pulsar 2s infinite; 
+        }
+        .cart-float:hover { animation: none; transform: scale(1.1); }
 
-        /* MODAL CARRITO */
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(2px); }
+        /* MODAL */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
         .modal.open { display: flex; }
-        .modal-box { background: white; width: 90%; max-width: 450px; max-height: 90vh; border-radius: 20px; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: popIn 0.3s; }
-        @keyframes popIn { from{transform:scale(0.9);opacity:0} to{transform:scale(1);opacity:1} }
+        .modal-box { background: white; width: 90%; max-width: 450px; max-height: 90vh; border-radius: 20px; display: flex; flex-direction: column; box-shadow: 0 20px 50px rgba(0,0,0,0.3); animation: entradaSuave 0.3s; }
         
-        .modal-header { padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .modal-header { padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #fafafa; border-radius: 20px 20px 0 0;}
         .modal-body { padding: 20px; overflow-y: auto; }
         .modal-footer { padding: 20px; border-top: 1px solid #eee; background: #fafafa; border-radius: 0 0 20px 20px; }
-        .cart-item { display: flex; gap: 15px; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
-        .cart-item img { width: 50px; height: 50px; object-fit: contain; }
-        .btn-checkout { background: var(--verde); color: white; width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: bold; display: flex; justify-content: center; gap: 10px; font-size: 1.1rem; cursor: pointer; }
-
-        /* --- NUEVO: MODAL DE PROMOCIÓN (POP-UP) --- */
-        .modal-promo {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); z-index: 5000;
-            display: none; /* Se activa con JS */
-            justify-content: center; align-items: center;
-            backdrop-filter: blur(5px);
-        }
-        .promo-content {
-            position: relative; width: 90%; max-width: 500px;
-            background: transparent; border-radius: 15px;
-            text-align: center;
-            animation: zoomIn 0.5s ease;
-        }
-        @keyframes zoomIn { from {transform: scale(0.5); opacity:0;} to {transform: scale(1); opacity:1;} }
         
-        .promo-img {
-            width: 100%; height: auto; border-radius: 15px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5); border: 2px solid white;
+        .cart-item { display: flex; gap: 15px; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #eee; align-items: center; }
+        .cart-item img { width: 50px; height: 50px; object-fit: contain; }
+        .btn-checkout { background: var(--verde); color: white; width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: bold; display: flex; justify-content: center; gap: 10px; font-size: 1.1rem; cursor: pointer; transition: transform 0.2s; }
+        .btn-checkout:hover { transform: scale(1.02); }
+
+        /* AVISO DE OFERTA EN CARRITO */
+        .promo-alert {
+            background: #e3fcec; border: 1px solid #00a000; color: #007000;
+            padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 0.9rem;
+            display: flex; align-items: center; gap: 10px; animation: flotar 2s infinite;
         }
-        .close-promo {
-            position: absolute; top: -15px; right: -15px;
-            background: red; color: white; border: 2px solid white;
-            width: 35px; height: 35px; border-radius: 50%;
-            font-size: 1.2rem; font-weight: bold; cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            display: flex; align-items: center; justify-content: center;
-        }
+        .precio-tachado { text-decoration: line-through; color: #999; font-size: 0.8rem; margin-right: 5px; }
+        .precio-oferta { color: var(--verde); font-weight: bold; font-size: 1rem; }
+
+        /* MODAL PROMO INICIO */
+        .modal-promo { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 5000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .promo-content { position: relative; width: 90%; max-width: 450px; animation: entradaSuave 0.5s; }
+        .promo-img { width: 100%; border-radius: 15px; border: 2px solid white; box-shadow: 0 0 30px rgba(0,0,0,0.8); }
+        .close-promo { position: absolute; top: -15px; right: -15px; background: red; color: white; width: 35px; height: 35px; border-radius: 50%; border: 2px solid white; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;}
 
         /* Responsive PC */
         @media(min-width: 992px) {
@@ -157,7 +167,7 @@
     </header>
 
     <div class="search-box">
-        <input type="text" id="search" class="search-input" placeholder="🔍 Buscar producto (ej. Azúcar, Fideos...)">
+        <input type="text" id="search" class="search-input" placeholder="🔍 Buscar producto...">
     </div>
 
     <div class="container">
@@ -173,65 +183,55 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const MI_WHATSAPP = "51964604628";
+            const MI_WHATSAPP = "51964604628"; 
             let carrito = [];
 
-            // --- LÓGICA DE LA PROMOCIÓN (POP-UP) ---
-            // Se abre 1 segundo después de cargar la página para dar un efecto suave
-            setTimeout(() => {
-                document.getElementById('promoModal').style.display = 'flex';
-            }, 1000);
+            // --- LÓGICA DE PROMO INICIAL ---
+            setTimeout(() => { document.getElementById('promoModal').style.display = 'flex'; }, 800);
+            window.cerrarPromo = () => document.getElementById('promoModal').style.display = 'none';
+            document.getElementById('promoModal').addEventListener('click', (e) => { if(e.target.id === 'promoModal') cerrarPromo(); });
 
-            window.cerrarPromo = () => {
-                document.getElementById('promoModal').style.display = 'none';
-            };
-
-            // Cerrar si hacen clic fuera de la imagen
-            document.getElementById('promoModal').addEventListener('click', (e) => {
-                if(e.target.id === 'promoModal') cerrarPromo();
-            });
-
-            // --- CATÁLOGO ---
+            // --- PRODUCTOS ---
             const productos = [
                 // SACOS
                 { id: 1, nombre: "Azúcar Andahuasi (50kg)", precio: 119.00, cat: "Sacos", img: "azucar-andahuasi.jpg", stock: 50 },
                 { id: 2, nombre: "Harina Doña Angélica (50kg)", precio: 108.00, cat: "Sacos", img: "harina-angelica.jpg", stock: 30 },
-                { id: 3, nombre: "Arroz Costeño (50kg)", precio: 120.00, cat: "Sacos", img: "arroz-costeno.jpg", stock: 100 },
-                // ACEITES
+                { id: 3, nombre: "Arroz Costeño (50kg)", precio: null, cat: "Sacos", img: "arroz-costeno.jpg", stock: 100 },
+                // ACEITES (El ID 6 activa la promo)
                 { id: 4, nombre: "Aceite Miramar (12 unid)", precio: 64.00, cat: "Aceites", img: "aceite-miramar.jpg", stock: 45 },
                 { id: 5, nombre: "Aceite Friemass (12 unid)", precio: 64.00, cat: "Aceites", img: "aceite-friemass.jpg", stock: 25 },
                 { id: 6, nombre: "Aceite Bucanero (12 unid)", precio: 57.00, cat: "Aceites", img: "aceite-bucanero.jpg", stock: 20 },
-                // FIDEOS ANITA
+                // FIDEOS ANITA (Reciben la promo)
                 { id: 7, nombre: "Spaghetti Anita (10kg)", precio: 31.00, cat: "Fideos", img: "spaghetti-anita.jpg", stock: 50 },
-                { id: 8, nombre: "Codo Rayado Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "codo-anita.jpg", stock: 40 },
-                { id: 9, nombre: "Canuto Rayado Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "canuto-anita.jpg", stock: 40 },
-                { id: 11, nombre: "Cabello de Ángel Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "cabello-angel.jpg", stock: 35 },
-                { id: 12, nombre: "Plumita Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "plumita-anita.jpg", stock: 35 },
-                { id: 13, nombre: "Fideo Arito Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "arito-anita.jpg", stock: 20 },
-                { id: 14, nombre: "Fideo Corbata Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "corbata-anita.jpg", stock: 20 },
-                { id: 15, nombre: "Fideo Tornillo Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "tornillo-anita.jpg", stock: 20 },
-                { id: 17, nombre: "Fideo Letras Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "letras-anita.jpg", stock: 20 },
-                // NUEVOS AZULES
-                { id: 18, nombre: "Mini Codo Rayado Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "minicodo-anita.jpg", stock: 20 },
-                { id: 19, nombre: "Macarrón Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "macarron-anita.jpg", stock: 20 },
-                { id: 20, nombre: "Caracol Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "caracol-anita.jpg", stock: 20 },
-                { id: 21, nombre: "Munición Anita (Pack 5kg)", precio: 15.50, cat: "Fideos", img: "municion-anita.jpg", stock: 20 },
-                { id: 22, nombre: "Tallarín Grueso Anita (Pack 10kg)", precio: 31.00, cat: "Fideos", img: "tallarin-grueso.jpg", stock: 20 },
+                { id: 8, nombre: "Codo Rayado Anita (5kg)", precio: 15.50, cat: "Fideos", img: "codo-anita.jpg", stock: 40 },
+                { id: 9, nombre: "Canuto Rayado Anita (5kg)", precio: 15.50, cat: "Fideos", img: "canuto-anita.jpg", stock: 40 },
+                { id: 11, nombre: "Cabello de Ángel Anita (5kg)", precio: 15.50, cat: "Fideos", img: "cabello-angel.jpg", stock: 35 },
+                { id: 12, nombre: "Plumita Anita (5kg)", precio: 15.50, cat: "Fideos", img: "plumita-anita.jpg", stock: 35 },
+                { id: 13, nombre: "Fideo Arito Anita (5kg)", precio: 15.50, cat: "Fideos", img: "arito-anita.jpg", stock: 20 },
+                { id: 14, nombre: "Fideo Corbata Anita (5kg)", precio: 15.50, cat: "Fideos", img: "corbata-anita.jpg", stock: 20 },
+                { id: 15, nombre: "Fideo Tornillo Anita (5kg)", precio: 15.50, cat: "Fideos", img: "tornillo-anita.jpg", stock: 20 },
+                { id: 17, nombre: "Fideo Letras Anita (5kg)", precio: 15.50, cat: "Fideos", img: "letras-anita.jpg", stock: 20 },
+                { id: 18, nombre: "Mini Codo Rayado Anita (5kg)", precio: 15.50, cat: "Fideos", img: "minicodo-anita.jpg", stock: 20 },
+                { id: 19, nombre: "Macarrón Anita (5kg)", precio: 15.50, cat: "Fideos", img: "macarron-anita.jpg", stock: 20 },
+                { id: 20, nombre: "Caracol Anita (5kg)", precio: 15.50, cat: "Fideos", img: "caracol-anita.jpg", stock: 20 },
+                { id: 21, nombre: "Munición Anita (5kg)", precio: 15.50, cat: "Fideos", img: "municion-anita.jpg", stock: 20 },
+                { id: 22, nombre: "Tallarín Grueso Anita (10kg)", precio: 31.00, cat: "Fideos", img: "tallarin-grueso.jpg", stock: 20 },
                 // OTROS
-                { id: 10, nombre: "Leche Gloria (Lata)", precio: 10.50, cat: "Abarrotes", img: "leche-gloria.jpg", stock: 200 },
-                { id: 16, nombre: "Sal Marina (Bolsa)", precio: 15.40, cat: "Abarrotes", img: "sal-marina.jpg", stock: 100 }
+                { id: 10, nombre: "Leche Gloria (Lata)", precio: null, cat: "Abarrotes", img: "leche-gloria.jpg", stock: 200 },
+                { id: 16, nombre: "Sal Marina (Bolsa)", precio: null, cat: "Abarrotes", img: "sal-marina.jpg", stock: 100 }
             ];
 
             const grid = document.getElementById('grid');
             function render(lista) {
                 grid.innerHTML = '';
-                lista.forEach(p => {
+                lista.forEach((p, index) => {
                     const precioTxt = p.precio ? `S/ ${p.precio.toFixed(2)}` : "Cotizar";
                     const btnTxt = p.stock === 0 ? "AGOTADO" : "AGREGAR";
                     const disable = p.stock === 0 ? "disabled" : "";
                     
+                    // Añadimos animación con retraso para efecto cascada
                     grid.innerHTML += `
-                        <div class="card">
+                        <div class="card" style="animation-delay: ${index * 0.05}s">
                             <div class="card-img">
                                 <span class="badge">${p.cat}</span>
                                 <img src="${p.img}" onerror="this.src='https://via.placeholder.com/200?text=Foto'" alt="${p.nombre}">
@@ -266,7 +266,6 @@
                 const p = productos.find(x => x.id === id);
                 const q = parseInt(document.getElementById(`in-${id}`).value);
                 const exist = carrito.find(x => x.id === id);
-                
                 if((exist ? exist.q : 0) + q > p.stock) return alert("Stock insuficiente");
                 
                 if(exist) exist.q += q;
@@ -287,22 +286,69 @@
                 document.getElementById('cart-count').innerText = carrito.reduce((a,b)=>a+b.q,0);
             }
 
+            // --- LÓGICA DE PRECIOS DINÁMICOS EN EL CARRITO ---
             window.abrirCarrito = () => {
                 const box = document.getElementById('cart-items');
                 const tot = document.getElementById('cart-total');
                 box.innerHTML = '';
+                
+                if(carrito.length===0) {
+                    box.innerHTML = "<p style='text-align:center; color:#999'>Carrito vacío</p>";
+                    tot.innerText = "S/ 0.00";
+                    document.getElementById('cart-modal').classList.add('open');
+                    return;
+                }
+
+                // 1. Verificar si tiene 5 o más aceites bucanero (ID 6)
+                const bucanero = carrito.find(x => x.id === 6);
+                const aplicaPromo = bucanero && bucanero.q >= 5;
+
+                // 2. Mensaje de promo si aplica
+                if(aplicaPromo) {
+                    box.innerHTML += `
+                        <div class="promo-alert">
+                            <i class="fa-solid fa-fire"></i>
+                            <div><b>¡OFERTA ACTIVADA!</b><br>Precios de Fideos Anita reducidos.</div>
+                        </div>`;
+                }
+
                 let t = 0;
-                if(carrito.length===0) box.innerHTML = "<p style='text-align:center; color:#999'>Carrito vacío</p>";
+
+                // 3. Renderizar items con precio ajustado
                 carrito.forEach((item, i) => {
-                    t += (item.precio||0) * item.q;
+                    let precioFinal = item.precio || 0;
+                    let esPrecioPromo = false;
+
+                    // APLICAR DESCUENTO SI ES FIDEO Y HAY PROMO
+                    if(aplicaPromo && item.cat === 'Fideos') {
+                        if(Math.abs(item.precio - 31.00) < 0.1) {
+                            precioFinal = 30.80; // De 31.00 a 30.80
+                            esPrecioPromo = true;
+                        } else if(Math.abs(item.precio - 15.50) < 0.1) {
+                            precioFinal = 15.40; // De 15.50 a 15.40
+                            esPrecioPromo = true;
+                        }
+                    }
+
+                    t += precioFinal * item.q;
+
+                    // HTML del precio (Tachado si hay oferta)
+                    let htmlPrecio = "";
+                    if(esPrecioPromo) {
+                        htmlPrecio = `<span class="precio-tachado">S/ ${item.precio.toFixed(2)}</span> <span class="precio-oferta">S/ ${precioFinal.toFixed(2)}</span>`;
+                    } else {
+                        htmlPrecio = `S/ ${precioFinal.toFixed(2)}`;
+                    }
+
                     box.innerHTML += `
                         <div class="cart-item">
                             <img src="${item.img}" onerror="this.src='https://via.placeholder.com/50'">
-                            <div>
+                            <div style="flex-grow:1">
                                 <div style="font-weight:bold; color:var(--azul)">${item.nombre}</div>
-                                <div style="font-size:0.9rem">Cant: ${item.q} | Sub: S/ ${((item.precio||0)*item.q).toFixed(2)}</div>
+                                <div style="font-size:0.9rem">${htmlPrecio} x unidad</div>
+                                <div style="font-size:0.85rem; color:#666">Subtotal: S/ ${(precioFinal*item.q).toFixed(2)}</div>
                             </div>
-                            <button onclick="delItem(${i})" style="margin-left:auto; color:red; border:none; background:none; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
+                            <button onclick="delItem(${i})" style="color:red; border:none; background:none; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     `;
                 });
@@ -313,15 +359,32 @@
             window.cerrarCarrito = () => document.getElementById('cart-modal').classList.remove('open');
             window.delItem = (i) => { carrito.splice(i,1); abrirCarrito(); updateUI(); };
 
+            // --- ENVÍO A WHATSAPP CON PRECIOS REALES ---
             window.enviarWhatsApp = () => {
                 if(carrito.length===0) return;
+                
+                // Recalcular promo al enviar
+                const bucanero = carrito.find(x => x.id === 6);
+                const aplicaPromo = bucanero && bucanero.q >= 5;
+
                 let msg = "Hola Distribuidora Muñoz, mi pedido:%0A%0A";
                 let t = 0;
+
                 carrito.forEach(i => {
-                    t += (i.precio||0)*i.q;
-                    msg += `▪ ${i.q} x ${i.nombre} (S/ ${i.precio ? i.precio.toFixed(2) : 'Cotizar'})%0A`;
+                    let precioFinal = i.precio || 0;
+                    if(aplicaPromo && i.cat === 'Fideos') {
+                        if(Math.abs(i.precio - 31.00) < 0.1) precioFinal = 30.80;
+                        if(Math.abs(i.precio - 15.50) < 0.1) precioFinal = 15.40;
+                    }
+                    t += precioFinal * i.q;
+                    
+                    msg += `▪ ${i.q} x ${i.nombre} (S/ ${precioFinal.toFixed(2)})%0A`;
                 });
-                msg += `%0A*TOTAL: S/ ${t.toFixed(2)}*`;
+
+                if(aplicaPromo) {
+                    msg += `%0A🔥 *¡OFERTA BUCANERO APLICADA!* 🔥%0A`;
+                }
+                msg += `%0A*TOTAL FINAL: S/ ${t.toFixed(2)}*`;
                 window.open(`https://wa.me/${MI_WHATSAPP}?text=${msg}`);
             };
 
@@ -337,4 +400,3 @@
     </script>
 </body>
 </html>
-
