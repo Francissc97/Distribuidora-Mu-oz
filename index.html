@@ -13,6 +13,11 @@
         input, button { font-size: 16px; outline: none; }
         :root { --azul: #002E5D; --naranja: #FF6600; --verde: #25D366; --gris-claro: #f8f9fa; }
 
+        /* Ocultar flechas feas por defecto de los inputs numéricos */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+
         /* --- HEADER Y NAVEGACIÓN --- */
         nav { background: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .logo-img { height: 50px; width: auto; object-fit: contain; }
@@ -33,7 +38,7 @@
         .filter-btn { background: white; border: 1px solid #eee; padding: 10px 25px; border-radius: 25px; white-space: nowrap; cursor: pointer; color: #555; font-weight: 700; font-size: 0.9rem; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .filter-btn.active { background: var(--azul); color: white; border-color: var(--azul); transform: scale(1.05); }
 
-        /* --- TARJETAS DE PRODUCTO (ESTILO NUEVO) --- */
+        /* --- TARJETAS --- */
         .container { max-width: 1100px; margin: 0 auto; padding: 0 15px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 25px; }
         
@@ -41,27 +46,25 @@
             background: white; border-radius: 20px; overflow: hidden; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.02);
             display: flex; flex-direction: column; transition: transform 0.3s; 
-            padding: 20px; /* Espacio interno general */
+            padding: 20px; 
         }
         .card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
         
         .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
         .badge { background: var(--azul); color: white; padding: 5px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 800; }
-        
         .card-img { height: 180px; text-align: center; margin-bottom: 15px; }
         .card-img img { height: 100%; width: auto; max-width: 100%; object-fit: contain; }
 
-        /* Textos */
         .stock { font-size: 0.85rem; color: var(--verde); font-weight: 700; margin-bottom: 5px; display: block; }
         .stock.low { color: #dc3545; }
         .name { font-size: 1.1rem; font-weight: 800; color: var(--azul); margin-bottom: 8px; line-height: 1.3; }
         .price { font-size: 1.6rem; color: var(--naranja); font-weight: 900; margin-bottom: 20px; display: block; }
 
-        /* --- CONTROL DE CANTIDAD (LO QUE PEDISTE) --- */
+        /* --- CONTROL DE CANTIDAD EDITABLE --- */
         .controls-wrapper {
             background: #f8f9fa; border-radius: 15px; padding: 5px;
             display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 15px; border: 1px solid #eee;
         }
         .qty-btn { 
             width: 35px; height: 35px; background: white; border: 1px solid #ddd; border-radius: 50%; 
@@ -70,10 +73,14 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: 0.2s;
         }
         .qty-btn:active { transform: scale(0.9); background: #eee; }
+        
+        /* Input editable */
         .qty-input { 
-            width: 50px; text-align: center; background: transparent; border: none; 
-            font-weight: 800; font-size: 1.2rem; color: var(--azul); 
+            width: 60px; text-align: center; background: white; border: 1px solid transparent; 
+            font-weight: 800; font-size: 1.2rem; color: var(--azul); border-radius: 8px;
+            transition: 0.3s;
         }
+        .qty-input:focus { border-color: var(--azul); outline: none; background: #fff; }
 
         /* Botón Agregar */
         .btn-add { 
@@ -112,7 +119,6 @@
             .card-img { height: 140px; }
             .name { font-size: 0.95rem; }
             .price { font-size: 1.3rem; }
-            .qty-btn { width: 30px; height: 30px; }
         }
     </style>
 </head>
@@ -133,8 +139,7 @@
                 <h3 style="color:var(--azul)">Tu Canasta</h3>
                 <button onclick="cerrarCarrito()" style="border:none; background:none; font-size:1.8rem; color:#999; cursor:pointer;">&times;</button>
             </div>
-            <div class="modal-body" id="cart-items">
-                </div>
+            <div class="modal-body" id="cart-items"></div>
             <div class="modal-footer">
                 <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-size:1.2rem; font-weight:800; color:var(--azul);">
                     <span>Total:</span>
@@ -187,17 +192,14 @@
                 // SACOS
                 { id: 1, nombre: "Azúcar Andahuasi (50kg)", precio: 119.00, cat: "Sacos", img: "azucar-andahuasi.jpg", stock: 50 },
                 { id: 2, nombre: "Harina Doña Angélica (50kg)", precio: 108.00, cat: "Sacos", img: "harina-angelica.jpg", stock: 30 },
-                { id: 3, nombre: "Rico Arroz Naranja Añejo", precio: 140.00, cat: "Sacos", img: "arroz-rico.jpg", stock: 100 },
-                
+                { id: 3, nombre: "Rico Arroz Naranja Añejo (49kg)", precio: 140.00, cat: "Sacos", img: "arroz-rico.jpg", stock: 100 },
                 // ACEITES
                 { id: 4, nombre: "Aceite Miramar (12 unid)", precio: 64.00, cat: "Aceites", img: "aceite-miramar.jpg", stock: 45 },
                 { id: 5, nombre: "Aceite Friemass (12 unid)", precio: 64.00, cat: "Aceites", img: "aceite-friemass.jpg", stock: 25 },
                 { id: 6, nombre: "Aceite Bucanero (12 unid)", precio: 57.00, cat: "Aceites", img: "aceite-bucanero.jpg", stock: 20 },
-                
-                // FIDEOS (TODOS)
+                // FIDEOS
                 { id: 7, nombre: "Spaghetti Anita (10kg)", precio: 31.00, cat: "Fideos", img: "spaghetti-anita.jpg", stock: 50 },
                 { id: 22, nombre: "Tallarín Grueso Anita (10kg)", precio: 31.00, cat: "Fideos", img: "tallarin-grueso.jpg", stock: 20 },
-                
                 { id: 8, nombre: "Codo Rayado Anita (5kg)", precio: 15.50, cat: "Fideos", img: "codo-anita.jpg", stock: 40 },
                 { id: 9, nombre: "Canuto Rayado Anita (5kg)", precio: 15.50, cat: "Fideos", img: "canuto-anita.jpg", stock: 40 },
                 { id: 11, nombre: "Cabello de Ángel Anita (5kg)", precio: 15.50, cat: "Fideos", img: "cabello-angel.jpg", stock: 35 },
@@ -212,7 +214,6 @@
                 { id: 21, nombre: "Munición Anita (5kg)", precio: 15.50, cat: "Fideos", img: "municion-anita.jpg", stock: 20 },
                 { id: 23, nombre: "Fideo Pepa Anita (5kg)", precio: 15.50, cat: "Fideos", img: "pepa-anita.jpg", stock: 20 },
                 { id: 24, nombre: "Rigatón y Caracol Chico (5kg)", precio: 15.50, cat: "Fideos", img: "rigaton-anita.jpg", stock: 20 },
-
             ];
 
             // RENDERIZADO
@@ -240,7 +241,7 @@
 
                             <div class="controls-wrapper">
                                 <button class="qty-btn" onclick="updInput(${p.id}, -1)">-</button>
-                                <input id="in-${p.id}" value="1" class="qty-input" readonly>
+                                <input type="number" id="in-${p.id}" value="1" class="qty-input" min="1" max="${p.stock}" onchange="validarManual(${p.id})">
                                 <button class="qty-btn" onclick="updInput(${p.id}, 1)">+</button>
                             </div>
 
@@ -253,17 +254,35 @@
             }
             render(productos);
 
-            // LOGICA PROMO
             setTimeout(() => { document.getElementById('promoModal').style.display = 'flex'; }, 800);
             window.cerrarPromo = () => document.getElementById('promoModal').style.display = 'none';
 
-            // FUNCIONES CARRITO
-            window.updInput = (id, v) => {
+            // --- LÓGICA DE VALIDACIÓN MANUAL ---
+            window.validarManual = (id) => {
                 const el = document.getElementById(`in-${id}`);
                 const prod = productos.find(x => x.id === id);
+                let val = parseInt(el.value);
+
+                // Si borran el número o ponen negativo -> 1
+                if(isNaN(val) || val < 1) {
+                    val = 1;
+                } 
+                // Si ponen más que el stock -> Corregir al stock
+                else if (val > prod.stock) {
+                    alert(`¡Solo tenemos ${prod.stock} unidades disponibles!`);
+                    val = prod.stock;
+                }
+                
+                el.value = val;
+            };
+
+            window.updInput = (id, v) => {
+                const el = document.getElementById(`in-${id}`);
                 let val = parseInt(el.value) + v;
+                // Ejecutamos la misma validación
+                const prod = productos.find(x => x.id === id);
                 if(val < 1) val = 1;
-                if(val > prod.stock) { alert("¡No hay más stock!"); val = prod.stock; }
+                if(val > prod.stock) { alert("¡Stock máximo alcanzado!"); val = prod.stock; }
                 el.value = val;
             };
 
@@ -291,7 +310,6 @@
                 document.getElementById('cart-count').innerText = carrito.reduce((a,b)=>a+b.q,0);
             }
 
-            // MODAL CARRITO
             window.abrirCarrito = () => {
                 const box = document.getElementById('cart-items');
                 const tot = document.getElementById('cart-total');
@@ -308,7 +326,7 @@
                 const aplicaPromo = bucanero && bucanero.q >= 5;
                 let t = 0;
 
-                if(aplicaPromo) box.innerHTML += `<div style="background:#e3fcec; border:1px solid green; padding:10px; border-radius:12px; margin-bottom:15px; color:green; font-weight:bold; display:flex; align-items:center; gap:10px;"><i class="fa-solid fa-fire"></i> ¡OFERTA BUCANERO ACTIVADA!</div>`;
+                if(aplicaPromo) box.innerHTML += `<div style="background:#e3fcec; border:1px solid green; padding:10px; border-radius:12px; margin-bottom:15px; color:green; font-weight:bold; display:flex; align-items:center; gap:10px;"><i class="fa-solid fa-fire"></i> ¡OFERTA ACTIVADA!</div>`;
 
                 carrito.forEach((item, i) => {
                     let precioFinal = item.precio || 0;
@@ -356,7 +374,7 @@
                     t += precioFinal * i.q;
                     msg += `▪ ${i.q} x ${i.nombre} (S/ ${precioFinal.toFixed(2)})%0A`;
                 });
-                if(aplicaPromo) msg += `%0A *¡OFERTA BUCANERO APLICADA!* %0A`;
+                if(aplicaPromo) msg += `%0A*¡OFERTA BUCANERO APLICADA!*%0A`;
                 msg += `%0A*TOTAL A PAGAR: S/ ${t.toFixed(2)}*`;
                 msg += `%0A%0AQuedo a la espera de confirmación.`;
                 window.open(`https://wa.me/${MI_WHATSAPP}?text=${msg}`);
