@@ -146,7 +146,7 @@
                 // SACOS
                 { id: 1, nombre: "Azúcar Andahuasi (50kg)", precio: 119.00, cat: "Sacos", img: "azucar-andahuasi.jpg", stock: 50 },
                 { id: 2, nombre: "Harina Doña Angélica (50kg)", precio: 108.00, cat: "Sacos", img: "harina-angelica.jpg", stock: 30 },
-                { id: 3, nombre: "Arroz Costeño (50kg)", precio: null, cat: "Sacos", img: "arroz-costeno.jpg", stock: 100 },
+                { id: 3, nombre: "Rico Arroz Naranja Añejo", precio: 102, cat: "Sacos", img: "arroz-rico.jpg", stock: 100 },
                 
                 // ACEITES
                 { id: 4, nombre: "Aceite Miramar (12 unid)", precio: 64.00, cat: "Aceites", img: "aceite-miramar.jpg", stock: 45 },
@@ -173,10 +173,6 @@
                 // NUEVOS AGREGADOS (PEPA Y RIGATON)
                 { id: 23, nombre: "Fideo Pepa Anita (5kg)", precio: 15.50, cat: "Fideos", img: "pepa-anita.jpg", stock: 20 },
                 { id: 24, nombre: "Fideo Rigatón y Caracol Chico (5kg)", precio: 15.50, cat: "Fideos", img: "rigaton-anita.jpg", stock: 20 },
-
-                // OTROS
-                { id: 10, nombre: "Leche Gloria (Lata)", precio: null, cat: "Abarrotes", img: "leche-gloria.jpg", stock: 200 },
-                { id: 16, nombre: "Sal Marina (Bolsa)", precio: null, cat: "Abarrotes", img: "sal-marina.jpg", stock: 100 }
             ];
 
             // RENDERIZADO
@@ -309,7 +305,7 @@
                     t += precioFinal * i.q;
                     msg += `▪ ${i.q} x ${i.nombre} (S/ ${precioFinal.toFixed(2)})%0A`;
                 });
-                if(aplicaPromo) msg += `%0A🔥 *¡OFERTA BUCANERO APLICADA!* 🔥%0A`;
+                if(aplicaPromo) msg += `%0A *¡OFERTA BUCANERO APLICADA!* %0A`;
                 msg += `%0A*TOTAL: S/ ${t.toFixed(2)}*`;
                 window.open(`https://wa.me/${MI_WHATSAPP}?text=${msg}`);
             };
@@ -326,3 +322,4 @@
     </script>
 </body>
 </html>
+
